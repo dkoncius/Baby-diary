@@ -2,7 +2,8 @@ import { initializeApp } from 'firebase/app';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, signOut, sendPasswordResetEmail } from "firebase/auth";
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { readAndCompressImage } from 'browser-image-resizer';
-import { doc, setDoc, getFirestore, collection, query, where, getDocs, addDoc } from 'firebase/firestore';
+import { doc, setDoc, getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
+
 
 
 // Your web app's Firebase configuration
