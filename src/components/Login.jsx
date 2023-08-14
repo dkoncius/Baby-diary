@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signOutUser, auth } from '../firebase';
+import { auth } from '../firebase/firebase-config';
+import { signOutUser } from '../firebase/auth';
 
 const Login = ({ user, setUser }) => {
   const [emailVerified, setEmailVerified] = useState(false);

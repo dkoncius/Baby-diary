@@ -1,7 +1,8 @@
 // LoginForm.jsx
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { signOutUser, auth, signInWithEmail, resetPassword  } from '../firebase';
+import { auth } from '../firebase/firebase-config';
+import { signOutUser, signInWithEmail, resetPassword  } from '../firebase/auth';
 import { motion } from 'framer-motion';
 
 const variants = {
@@ -23,7 +24,7 @@ const LoginForm = ({ setUser, setShowingForm }) => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       if (user) {
         setUser(user);
-        navigate.push('/');
+        navigate('/'); // Corrected this line
         setShowingForm(false);
       }
     });
@@ -47,14 +48,14 @@ const LoginForm = ({ setUser, setShowingForm }) => {
         default:
           setError(response.error);
       }
-      signOutUser(); // Sign out the user
+      signOutUser()
     } else if (!auth.currentUser.emailVerified) {
       setError('Prašome patvirtinti paštą prieš prisijungiant.');
-      signOutUser(); // Sign out the user
+      signOutUser();
     } else {
       setEmail('');
       setPassword('');
-      navigate('/');
+      navigate('/'); 
     }
   };
 

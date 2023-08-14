@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from "./components/Login";
 import LoginForm from "./components/LoginForm";
 import SignUpForm from "./components/SignUpForm";
-import { getSongs, auth } from './firebase';
+import { auth } from './firebase/firebase-config';
 import { Footer } from "./components/Footer";
 import { Months } from "./components/Months";
 
@@ -24,7 +24,7 @@ function App() {
 
 
   return (
-    <Router>
+    <Router className="app">
       <Login user={user} setUser={setUser}/>
       
       {isAuthChecked && (
@@ -41,7 +41,7 @@ function App() {
             <Route path="/signup" element={<SignUpForm setUser={setUser} />} />
           </Routes>
 
-          <Footer/>
+          {user && <Footer/>}
         </>
       )}
     </Router>
