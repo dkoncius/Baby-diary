@@ -1,7 +1,8 @@
 // LoginForm.jsx
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { signOutUser, auth, signInWithEmail, resetPassword  } from '../firebase';
+import { auth } from '../firebase/firebase-config';
+import { signOutUser, signInWithEmail, resetPassword  } from '../firebase/auth';
 import { motion } from 'framer-motion';
 
 const variants = {
@@ -9,52 +10,37 @@ const variants = {
   visible: { opacity: 1, y: 0 },
 };
 
-
-const LoginForm = ({ setUser, setShowingForm }) => {
+const LoginForm = ({ setUser }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const [resetRequested, setResetRequested] = useState(false);
 
-
   // Listen to auth state changes
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
-      if (user) {
+      if (user && user.emailVerified) {
         setUser(user);
-        navigate.push('/');
-        setShowingForm(false);
+        navigate('/');
       }
     });
     return unsubscribe;
-  }, [setUser, setShowingForm, navigate]);
-
+  }, [setUser, navigate]);
+  
   const handleSignIn = async (e) => {
     e.preventDefault();
     const response = await signInWithEmail(email, password);
     if (response.error) {
-      switch (response.error) {
-        case 'Firebase: Error (auth/user-not-found).':
-          setError('Vartotojas nerastas');
-          break;
-        case 'Firebase: Error (auth/wrong-password).':
-          setError('Neteisingas slaptažodis');
-          break;
-        case 'Prašome patvirtinti paštą prieš prisijungiant.':
-          setError('Prašome patvirtinti paštą prieš prisijungiant.');
-          break;
-        default:
-          setError(response.error);
-      }
-      signOutUser(); // Sign out the user
+      setError(response.error === 'Firebase: Error (auth/wrong-password)' ? 'Neteisingas slaptažodis' : 'Vartotojas nerastas');
+      signOutUser();
     } else if (!auth.currentUser.emailVerified) {
       setError('Prašome patvirtinti paštą prieš prisijungiant.');
-      signOutUser(); // Sign out the user
+      signOutUser();
     } else {
       setEmail('');
       setPassword('');
-      navigate('/');
+      navigate('/'); 
     }
   };
 

@@ -1,10 +1,10 @@
 // App.jsx
 import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { auth } from './firebase/firebase-config';
 import Login from "./components/Login";
 import LoginForm from "./components/LoginForm";
 import SignUpForm from "./components/SignUpForm";
-import { getSongs, auth } from './firebase';
 import { Footer } from "./components/Footer";
 import { Months } from "./components/Months";
 
@@ -16,20 +16,20 @@ function App() {
     // listen for auth state changes
     const unsubscribe = auth.onAuthStateChanged(user => {
       setUser(user);
-      setIsAuthChecked(true); // add this line
+      setIsAuthChecked(true);
     });
     // unsubscribe to the listener when unmounting
     return () => unsubscribe(); 
   }, []);
+  
 
 
   return (
-    <Router>
+    <Router className="app">
       <Login user={user} setUser={setUser}/>
-      
+      <h1 className="title">Kūdikio dienoraštis</h1>
       {isAuthChecked && (
         <>
-
           <Routes>
             <Route path="/" element={
               <>
@@ -41,7 +41,7 @@ function App() {
             <Route path="/signup" element={<SignUpForm setUser={setUser} />} />
           </Routes>
 
-          <Footer/>
+          {user && <Footer/>}
         </>
       )}
     </Router>

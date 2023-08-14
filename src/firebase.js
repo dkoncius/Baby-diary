@@ -1,6 +1,10 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, getDocs, doc, updateDoc, increment, getDoc, addDoc, query, where, onSnapshot } from 'firebase/firestore';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification , signOut, sendPasswordResetEmail  } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, signOut, sendPasswordResetEmail } from "firebase/auth";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { readAndCompressImage } from 'browser-image-resizer';
+import { doc, setDoc, getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
+
+
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -13,61 +17,22 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
 const auth = getAuth(app);
+const storage = getStorage(app); // Initialize storage instance
+const db = getFirestore(app);
 
-export { auth };
-
-export const getUserVotes = (userId, callback) => {
-  const votesRef = collection(db, 'votes');
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  const unsubscribe = onSnapshot(query(votesRef, where("userId", "==", userId), where("timestamp", ">=", today)), (snapshot) => {
-    callback(snapshot.size);
-  });
-
-  return unsubscribe;
-};
-
-
-export const getSongs = async () => {
-  const snapshot = await getDocs(collection(db, 'songs'));
-  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-};
-
-export const voteForSong = async (userId, songId) => {
-  const votesRef = collection(db, 'votes');
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  const votesSnapshot = await getDocs(query(votesRef, where("userId", "==", userId), where("timestamp", ">=", today)));
-  if (votesSnapshot.size >= 5) {
-    alert("Išnaudojote dienos limitą. Penki balsai per dieną :)")
-    console.log("User has already voted 5 times today.");
-    return false;
-  }
-
-  const songRef = doc(db, 'songs', songId);
-  const songSnap = await getDoc(songRef);
-  
-  if (songSnap.exists()) {
-    await updateDoc(songRef, { votes: increment(1) });
-    await addDoc(votesRef, { userId, songId, timestamp: new Date() }); // Add vote record
-    return true;
-  } else {
-    console.log(`No song with ID ${songId} exists.`);
-    return false;
-  }
-};
+export { auth, storage }; // Export storage along with auth
 
 export const signUpWithEmail = async (email, password) => {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    
+
     // Send verification email
     await sendEmailVerification(userCredential.user);
-    
+
+    // Create user document in Firestore
+    await createUserInFirestore(userCredential.user.uid);
+
     return { user: userCredential.user };
   } catch (error) {
     return { error: error.message };
@@ -84,15 +49,13 @@ export const signInWithEmail = async (email, password) => {
   }
 };
 
-
 export const signOutUser = async () => {
   try {
-    await auth.signOut();
+    await signOut(auth);
   } catch (error) {
     console.error('Error signing out:', error);
   }
 };
-
 
 export const resetPassword = async (email) => {
   try {
@@ -101,4 +64,53 @@ export const resetPassword = async (email) => {
   } catch (error) {
     return { error: error.message };
   }
+};
+
+export const uploadImage = async (file, userId) => {
+  try {
+    const resizedImage = await readAndCompressImage(file, {
+      quality: 0.9,
+      maxWidth: 1080,
+    });
+
+    const storageRef = ref(storage, `users/${userId}/${file.name}`);
+    const uploadTask = uploadBytesResumable(storageRef, resizedImage);
+
+    return new Promise((resolve, reject) => {
+      uploadTask.on('state_changed', () => {}, reject, () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
+          uploadPhotoMetadata(userId, downloadUrl).then(() => {
+            resolve(downloadUrl);
+          });
+        });
+      });
+    });
+  } catch (error) {
+    console.error('Error uploading image:', error);
+    throw error;
+  }
+};
+
+
+export const uploadPhotoMetadata = async (userId, imageUrl) => {
+  const photosRef = collection(db, 'users', userId, 'photos');
+  await addDoc(photosRef, {
+    imageUrl,
+    timestamp: new Date(),
+  });
+};
+
+export const createUserInFirestore = async (userId) => {
+  const userRef = doc(db, 'users', userId);
+  await setDoc(userRef, {
+    // any initial data you want to set for the user
+  });
+};
+
+
+export const getUserPhotos = async (userId) => {
+  const photosRef = collection(db, 'users', userId, 'photos');
+  const q = query(photosRef, where('userId', '==', userId));
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map(doc => doc.data());
 };
