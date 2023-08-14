@@ -4,7 +4,7 @@ export const Footer = () => {
   return (
     <footer>
         <div className="container">
-            <a className='copy' href="#" target='_blank'>2023 © Baby diary</a>
+            <a className='copy' href="#" target='_blank'>2023 © Kūdikio dienoraštis</a>
             <div className="social">
 
                 <a href="#" target='_blank'>

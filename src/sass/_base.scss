@@ -17,3 +17,19 @@ body {
 }
 
 
+.title {
+  font-family: $font-title;
+  text-align: center;
+  margin: 100px 0;
+  letter-spacing: 2px;
+  background: black;
+  color: $primary-color;
+  padding: 20px;
+
+    @media (max-width: 768px) {
+      font-size: 1.5em;
+      margin-bottom: 0px;
+  }
+
+}
+

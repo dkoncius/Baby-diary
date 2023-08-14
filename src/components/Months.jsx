@@ -1,68 +1,35 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { auth } from '../firebase/firebase-config';
-import { uploadImage } from '../firebase/storage';
-import { getUserPhotos } from '../firebase/firestore';
+import { handleFileUpload, fetchPhotos, getUserId } from '../utils/monthsUtils';
+import { Month } from './Month';
 
 export const Months = () => {
-  const [photos, setPhotos] = useState([]);
+  const [photos, setPhotos] = useState(Array(12).fill(null)); // Initialize with 12 null values
+  const [selectedMonthIndex, setSelectedMonthIndex] = useState(null);
   const fileInputRef = useRef(null);
 
-  const handleFileUpload = async (e) => {
-    const file = e.target.files[0];
-    const userId = auth.currentUser ? auth.currentUser.uid : null;
-
-    if (!userId) {
-      console.error('No user ID found');
-      return;
-    }
-
-    if (file) {
-      try {
-        const downloadURL = await uploadImage(file, userId);
-        console.log('File available at:', downloadURL);
-        // Fetch photos again after upload
-        fetchPhotos(userId);
-      } catch (error) {
-        console.error('Error uploading image:', error);
-      }
-    }
-  };
-
-  const handleClick = () => {
+  const handleClick = (index) => {
+    setSelectedMonthIndex(index);
     fileInputRef.current.click();
   };
 
-  const fetchPhotos = async (userId) => {
-    try {
-      const userPhotos = await getUserPhotos(userId);
-      console.log('Fetched photos:', userPhotos); // Log retrieved photos
-      setPhotos(userPhotos);
-    } catch (error) {
-      console.error('Error fetching photos:', error);
-    }
+  const fetchPhotosCallback = (userId) => {
+    fetchPhotos(userId, setPhotos);
   };
-  
 
   useEffect(() => {
-    const userId = auth.currentUser ? auth.currentUser.uid : null;
+    const userId = getUserId();
     if (userId) {
-      fetchPhotos(userId);
+      fetchPhotosCallback(userId);
     }
   }, []);
 
   return (
     <>
-      <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={handleFileUpload} />
+      <input type="file" ref={fileInputRef} style={{ display: 'none' }}
+             onChange={(e) => handleFileUpload(e.target.files[0], getUserId(), selectedMonthIndex, photos, setPhotos, fetchPhotosCallback)} />
       <div className="months-boxes">
-        {photos.map((photoUrl, i) => (
-          <div key={i} className="month-box" onClick={handleClick}>
-            <img src={photoUrl} alt={`Month ${i + 1}`} />
-          </div>
-        ))}
-        {Array(20 - photos.length).fill().map((_, i) => (
-          <div key={i + photos.length} className="month-box" onClick={handleClick}>
-            <i className="fa-solid fa-plus"></i>
-          </div>
+        {Array.from({ length: 12 }, (_, i) => (
+          <Month key={i} index={i} imageUrl={photos[i]} onClick={() => handleClick(i)} />
         ))}
       </div>
     </>

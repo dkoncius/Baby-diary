@@ -15,7 +15,6 @@ function App() {
   useEffect(() => {
     // listen for auth state changes
     const unsubscribe = auth.onAuthStateChanged(user => {
-      console.log("User object:", user); // Add this line
       setUser(user);
       setIsAuthChecked(true);
     });
@@ -28,7 +27,7 @@ function App() {
   return (
     <Router className="app">
       <Login user={user} setUser={setUser}/>
-      
+      <h1 className="title">Kūdikio dienoraštis</h1>
       {isAuthChecked && (
         <>
           <Routes>
