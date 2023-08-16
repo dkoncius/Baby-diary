@@ -1,28 +1,29 @@
-import { doc, setDoc, collection, getDocs, addDoc } from 'firebase/firestore';
+import { doc, setDoc, collection, getDocs } from 'firebase/firestore';
 import { db } from './firebase-config';
 
 export const createUserInFirestore = async (userId) => {
   const userRef = doc(db, 'users', userId);
-  await setDoc(userRef, {
-    // any initial data you want to set for the user
-  });
+  await setDoc(userRef, {});
 };
 
-export const uploadPhotoMetadata = async (userId, imageUrl) => {
-  const photosRef = collection(db, 'users', userId, 'photos');
-  await addDoc(photosRef, {
+export const uploadPhotoMetadata = async (userId, monthIndex, imageUrl) => {
+  const monthRef = doc(db, 'users', userId, 'months', monthIndex.toString());
+  await setDoc(monthRef, {
+    index: monthIndex,
     imageUrl,
     timestamp: new Date(),
   });
 };
 
 export const getUserPhotos = async (userId) => {
-  const photosRef = collection(db, 'users', userId, 'photos');
-  const snapshot = await getDocs(photosRef);
-  return snapshot.docs.map(doc => doc.data().imageUrl);
+  const monthsRef = collection(db, 'users', userId, 'months');
+  const snapshot = await getDocs(monthsRef);
+  const photos = Array(12).fill(null);
+  snapshot.docs.forEach(doc => {
+    const data = doc.data();
+    if (data.index !== undefined) {
+      photos[data.index] = data.imageUrl;
+    }
+  });
+  return photos;
 };
-
-
-
-// New function to get month photos
-export const getMonthPhotos = getUserPhotos; // Same functionality as getUserPhotos, but with a more descriptive name

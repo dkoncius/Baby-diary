@@ -8,12 +8,12 @@ export const handleFileUpload = async (file, userId, selectedMonthIndex, photos,
       console.error('No user ID found');
       return;
     }
-  
+
     if (file) {
       try {
-        const downloadURL = await uploadImage(file, userId);
+        const downloadURL = await uploadImage(file, userId, selectedMonthIndex);
         console.log('File available at:', downloadURL);
-        
+
         if (selectedMonthIndex !== null) {
           const newPhotos = [...photos];
           newPhotos[selectedMonthIndex] = downloadURL;
@@ -25,8 +25,7 @@ export const handleFileUpload = async (file, userId, selectedMonthIndex, photos,
         console.error('Error uploading image:', error);
       }
     }
-  };
-  
+};
 
 export const fetchPhotos = async (userId, setPhotos) => {
   try {

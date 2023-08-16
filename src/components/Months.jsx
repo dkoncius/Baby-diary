@@ -1,9 +1,10 @@
+// Months.jsx
 import React, { useEffect, useState, useRef } from 'react';
 import { handleFileUpload, fetchPhotos, getUserId } from '../utils/monthsUtils';
 import { Month } from './Month';
 
 export const Months = () => {
-  const [photos, setPhotos] = useState(Array(12).fill(null)); // Initialize with 12 null values
+  const [photos, setPhotos] = useState(Array(12).fill(null));
   const [selectedMonthIndex, setSelectedMonthIndex] = useState(null);
   const fileInputRef = useRef(null);
 
