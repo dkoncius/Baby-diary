@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "browser-image-resizer": "^2.4.1",
-    "firebase": "^10.1.0",
+    "firebase": "^10.3.0",
     "framer-motion": "^10.15.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
