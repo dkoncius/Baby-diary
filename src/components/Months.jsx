@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { handleFileUpload, fetchPhotos, getUserId } from '../utils/monthsUtils';
+import { fetchPhotos, getUserId, handleFileChange, loadUserPhotos  } from '../utils/monthsUtils';
 import { Month } from './Month';
 
 export const Months = () => {
@@ -22,10 +22,7 @@ export const Months = () => {
   };
 
   useEffect(() => {
-    const userId = getUserId();
-    if (userId) {
-      fetchPhotos(userId, setPhotos);
-    }
+    loadUserPhotos(setPhotos);
   }, []);
 
   return (
@@ -34,12 +31,7 @@ export const Months = () => {
         type="file"
         style={{ display: 'none' }}
         ref={fileInputRef}
-        onChange={e => {
-            if (e.target.files.length > 0) {
-                const file = e.target.files[0];
-                handleFileUpload(file, getUserId(), selectedMonthIndex, photos, setPhotos, fetchPhotos);
-            }
-        }}
+        onChange={e => handleFileChange(e, getUserId(), selectedMonthIndex, photos, setPhotos, fetchPhotos)}
       />
       {selectedImage && (
         <div className="expanded-image">

@@ -38,3 +38,18 @@ export const fetchPhotos = async (userId, setPhotos) => {
 export const getUserId = () => {
   return auth.currentUser ? auth.currentUser.uid : null;
 };
+
+
+export const handleFileChange = (e, userId, selectedMonthIndex, photos, setPhotos, fetchPhotos) => {
+  if (e.target.files.length > 0) {
+      const file = e.target.files[0];
+      handleFileUpload(file, userId, selectedMonthIndex, photos, setPhotos, fetchPhotos);
+  }
+};
+
+export const loadUserPhotos = (setPhotos) => {
+  const userId = getUserId();
+  if (userId) {
+    fetchPhotos(userId, setPhotos);
+  }
+}
