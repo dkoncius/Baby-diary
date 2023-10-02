@@ -14,7 +14,7 @@ const SignUpForm = ({ setUser }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [success, setSuccess] = useState(false);
 
   const navigate = useNavigate();
 
@@ -38,9 +38,10 @@ const SignUpForm = ({ setUser }) => {
     }
 
     const response = await signUpWithEmail(email, password);
-    if (response.error && response.error.code === "auth/email-already-in-use") {
+    console.log(response.error); // Let's inspect the error to understand its structure
+
+    if (response.error === "Firebase: Error (auth/email-already-in-use).") {
       setError("Toks el. paštas jau naudojamas.");
-      setSuccess('');
     } else {
       setEmail('');
       setPassword('');

@@ -1,4 +1,3 @@
-// monthsUtils.js
 import { uploadImage } from '../firebase/storage';
 import { getUserPhotos } from '../firebase/firestore';
 import { auth } from '../firebase/firebase-config';

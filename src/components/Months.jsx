@@ -10,10 +10,10 @@ export const Months = () => {
 
   const handleClickMonth = (index) => {
     if (photos[index]) {
-      setSelectedImage(photos[index]); // Set the clicked image as the selected image
+      setSelectedImage(photos[index]);
     } else {
       setSelectedMonthIndex(index);
-      fileInputRef.current.click(); // Trigger the hidden file input
+      fileInputRef.current.click();
     }
   };
 
@@ -21,14 +21,10 @@ export const Months = () => {
     setSelectedImage(null);
   };
 
-  const fetchPhotosCallback = (userId) => {
-    fetchPhotos(userId, setPhotos);
-  };
-
   useEffect(() => {
     const userId = getUserId();
     if (userId) {
-      fetchPhotosCallback(userId);
+      fetchPhotos(userId, setPhotos);
     }
   }, []);
 
@@ -38,7 +34,12 @@ export const Months = () => {
         type="file"
         style={{ display: 'none' }}
         ref={fileInputRef}
-        onChange={e => handleFileUpload(e, selectedMonthIndex, setPhotos)}
+        onChange={e => {
+            if (e.target.files.length > 0) {
+                const file = e.target.files[0];
+                handleFileUpload(file, getUserId(), selectedMonthIndex, photos, setPhotos, fetchPhotos);
+            }
+        }}
       />
       {selectedImage && (
         <div className="expanded-image">
