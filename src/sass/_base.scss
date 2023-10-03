@@ -10,6 +10,10 @@
   text-decoration: none;
 }
 
+a {
+  color: $blank-color;
+}
+
 body {
   background: $primary-color;
   min-height: 100vh;
