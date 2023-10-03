@@ -4,9 +4,9 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { auth } from './firebase/firebase-config';
 import Login from "./components/Login";
 import LoginForm from "./components/LoginForm";
-import SignUpForm from "./components/SignUpForm";
+import Register from "./components/RegisterForm";
 import { Footer } from "./components/Footer";
-import { Months } from "./components/Months";
+import { Feed } from "./components/Feed/Feed";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -27,18 +27,17 @@ function App() {
   return (
     <Router className="app">
       <Login user={user} setUser={setUser}/>
-      <h1 className="title">Kūdikio dienoraštis</h1>
       {isAuthChecked && (
         <>
           <Routes>
             <Route path="/" element={
               <>
-                {user && <Months/>}
+                {user && <Feed/>}
               </>
             } />
 
             <Route path="/login" element={<LoginForm setUser={setUser} />} />
-            <Route path="/signup" element={<SignUpForm setUser={setUser} />} />
+            <Route path="/signup" element={<Register setUser={setUser} />} />
           </Routes>
 
           {user && <Footer/>}
