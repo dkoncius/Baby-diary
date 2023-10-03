@@ -52,6 +52,9 @@ const SignUpForm = ({ setUser }) => {
   };
 
   return (
+    <>
+    <div className="register-form-image"></div>
+
     <motion.form
       onSubmit={handleSignUp}
       variants={variants}
@@ -82,6 +85,7 @@ const SignUpForm = ({ setUser }) => {
       {error && <p className="userNotFound">{error}</p>}
       {success && <p className='success'>{success}</p>}
     </motion.form>
+    </>
   );  
 };
 

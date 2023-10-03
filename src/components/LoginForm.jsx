@@ -63,6 +63,9 @@ const LoginForm = ({ setUser }) => {
   };
 
   return (
+    <>
+    <div className="login-form-image"></div>
+
     <motion.form
       onSubmit={handleSignIn}
       variants={variants}
@@ -70,6 +73,7 @@ const LoginForm = ({ setUser }) => {
       animate="visible"
       transition={{ duration: 0.5 }}
     >
+      <h1>Prisijungimas</h1>
       <input type="email" placeholder="El. paštas" value={email} onChange={(e) => setEmail(e.target.value)} required />
       <input type="password" placeholder="Slaptažodis" value={password} onChange={(e) => setPassword(e.target.value)} required />
       <button type="submit">Prisijungti</button>
@@ -84,6 +88,8 @@ const LoginForm = ({ setUser }) => {
       
       <p>Naujas vartotojas? <Link to="/signup">Registruotis</Link></p>
     </motion.form>
+    </>
+   
   );
 };
 
