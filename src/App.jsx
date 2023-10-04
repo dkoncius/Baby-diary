@@ -1,5 +1,4 @@
-// App.jsx
-import { useState, useEffect } from "react";
+import { useState, useEffect, createElement } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { auth } from './firebase/firebase-config';
 import Login from "./components/Login";
@@ -10,19 +9,22 @@ import { Feed } from "./components/Feed/Feed";
 
 function App() {
   const [user, setUser] = useState(null);
-  const [isAuthChecked, setIsAuthChecked] = useState(false); // add this line
+  const [isAuthChecked, setIsAuthChecked] = useState(false); 
 
   useEffect(() => {
-    // listen for auth state changes
+    // Subscribe to user on mount
     const unsubscribe = auth.onAuthStateChanged(user => {
-      setUser(user);
-      setIsAuthChecked(true);
+      setUser(user); // set user in state
+      setIsAuthChecked(true); // set auth check flag to true
     });
-    // unsubscribe to the listener when unmounting
+    // Unsubscribe on cleanup
     return () => unsubscribe(); 
   }, []);
-  
 
+  // Higher-order function to protect a component and redirect to "/login" if not authenticated
+  const protectedElement = (Component) => {
+    return user ? createElement(Component) : createElement(LoginForm);
+  };
 
   return (
     <Router className="app">
@@ -30,16 +32,12 @@ function App() {
       {isAuthChecked && (
         <>
           <Routes>
-            <Route path="/" element={
-              <>
-                {user && <Feed/>}
-              </>
-            } />
-
+            {/* Use protectedElement function to conditionally render Feed or LoginForm */}
+            <Route path="/" element={protectedElement(Feed)} />
             <Route path="/login" element={<LoginForm setUser={setUser} />} />
-            <Route path="/signup" element={<Register setUser={setUser} />} />
+            <Route path="/register" element={<Register setUser={setUser} />} />
           </Routes>
-
+          {/* Conditionally render Footer if user exists */}
           {user && <Footer/>}
         </>
       )}
