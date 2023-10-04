@@ -53,7 +53,6 @@
 
   input {
     background: #EADCF1;
-    color: #A98AB8;
     grid-column: span 2;
 
     &:focus {
@@ -83,6 +82,9 @@
     -moz-appearance: textfield;
   }
 
+  input::placeholder {
+    color: $darker-purple-color;
+  }
 
   button {
     grid-column: span 2;
@@ -114,7 +116,7 @@ form {
   }
 
   input, button {
-    color: $blank-color;
+    color: $darker-purple-color;
     background: #FFF5F2;
     height: 56px;
     padding: 10px;
