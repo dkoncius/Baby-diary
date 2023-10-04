@@ -1,6 +1,6 @@
+import { doc, setDoc } from "firebase/firestore"
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, signOut, sendPasswordResetEmail   } from 'firebase/auth';
-import { auth } from './firebase-config';
-import { createUserInFirestore } from './firestore';
+import { auth, db } from './firebase-config';
 
 export const signUpWithEmail = async (email, password) => {
   try {
@@ -36,5 +36,21 @@ export const resetPassword = async (email) => {
     return { success: 'Password reset email sent!' };
   } catch (error) {
     return { error: error.message };
+  }
+};
+
+
+export const createUserInFirestore = async (userId) => {
+  try {
+    if (!userId) throw new Error('User ID is required');
+    
+    const userRef = doc(db, 'users', userId);
+    await setDoc(userRef, {
+      // You can add some default fields here if needed
+      created: new Date(),
+    });
+  } catch (error) {
+    console.error('Error creating user in Firestore:', error);
+    throw error;
   }
 };

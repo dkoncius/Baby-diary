@@ -1,3 +1,44 @@
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1000px;
+    margin: auto;
+    padding: 0 20px;
+    height: 100px;
+    color: $darker-purple-color;
+
+    .header-kid {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        cursor: pointer;
+
+        &:hover .header-kid-image {
+            transform: scale(1.1);
+            box-shadow: 0 0 5px $darker-purple-color;
+        }
+        
+        .header-kid-image {
+            width: 45px;
+            height: 45px;
+            border-radius: 45px;
+            object-fit: cover;
+            transition: 0.3s;
+        }
+
+        .header-kid-name {
+            font-size: 20px;
+            font-weight: bold;
+        }
+    }
+
+    .bars {
+        font-size: 30px;
+        cursor: pointer;
+    }
+}
+
 .highlights {
     max-width: 1000px;
     margin: auto;

@@ -1,0 +1,92 @@
+.kids-nav {
+    display: flex;
+    justify-content: space-between;
+    color: $darker-purple-color;
+    max-width: 1000px;
+    width: 90%;
+    margin: 30px auto;
+
+    .logout {
+        cursor: pointer;
+       
+        &:hover {
+            font-weight: bold;
+        }
+    }
+
+    .kids-nav-back-to-feed {
+        cursor: pointer;
+       
+        &:hover {
+            font-weight: bold;
+        }
+    }
+
+}
+
+.kids-container {
+    display: grid;
+    gap: 30px;
+    max-width: 1000px;
+    width: 90%;
+    margin: auto;
+
+    &:hover .kid {
+        cursor: pointer;
+        box-shadow: 10px 10px 30px #F4C9C0AD;
+        opacity: 0.5;
+    }
+
+    .kid {
+        display: flex;
+        gap: 30px;
+        width: 100%;
+        background: $creamy-color;
+        color: $darker-purple-color;
+        padding: 30px;
+        border-radius: 15px;
+        transition: 0.3s;
+
+        &:hover {
+            cursor: pointer;
+            box-shadow: 10px 10px 30px #F4C9C0AD;
+            opacity: 1;
+        }
+
+        .kid-image {
+            width: 82px;
+            height: 82px;
+            border-radius: 82px;
+            object-fit: cover;
+        }
+
+        .kid-name {
+            font-size: 20px;
+        }
+
+        .kid-birthday,
+        .kid-age {
+            opacity: 0.5;
+            font-size: 14px;
+        }
+    }
+
+    .new-kid-button {
+        height: 56px;
+        width: 100%;
+        margin: 30px auto;
+        border-radius: 15px;
+        background: $purple-color;
+        color: $creamy-color;
+        font-size: 14px;
+        outline: none;
+        border: none;
+        transition: 0.3s;
+
+        &:hover {
+            cursor: pointer;
+            background: $darker-purple-color;
+        }
+    }
+
+}

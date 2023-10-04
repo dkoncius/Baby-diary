@@ -2,6 +2,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import Highlights from './Highlights';
 import MonthImage from "/assets/feed-2.jpg"
+import { Header } from './Header';
 
 const ImageSwiper = () => {
     return (
@@ -29,6 +30,7 @@ const ImageSwiper = () => {
 export const Feed = () => {
   return (
     <>
+       <Header/>
        <Highlights image={MonthImage}/>
         
         <div className="metrics">

@@ -10,7 +10,7 @@ const variants = {
   visible: { opacity: 1, y: 0 },
 };
 
-const SignUpForm = ({ setUser }) => {
+const SignUpForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -62,6 +62,7 @@ const SignUpForm = ({ setUser }) => {
       animate="visible"
       transition={{ duration: 0.5 }}
     >
+      <h1>Registracija</h1>
       {!success && (
         <>
           <input
@@ -83,7 +84,15 @@ const SignUpForm = ({ setUser }) => {
         </>
       )}
       {error && <p className="userNotFound">{error}</p>}
-      {success && <p className='success'>{success}</p>}
+      {success && (
+      <>
+        <p className='success'>{success}</p>
+        <Link to="/login">
+          <button type="button">Prisijungti</button>
+        </Link>
+      </>
+    )}
+
     </motion.form>
     </>
   );  
