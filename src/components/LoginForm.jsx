@@ -86,7 +86,7 @@ const LoginForm = ({ setUser }) => {
       {resetRequested && <p className="passwordReset">Slaptažodžio atstatymo nuoroda išsiųsta į {email}.</p>}
       {error && error !== 'Neteisingas slaptažodis' && <p className="userNotFound">{error}</p>}
       
-      <p>Naujas vartotojas? <Link to="/signup">Registruotis</Link></p>
+      <p>Naujas vartotojas? <Link to="/register">Registruotis</Link></p>
     </motion.form>
     </>
    
