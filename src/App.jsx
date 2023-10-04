@@ -6,6 +6,7 @@ import LoginForm from "./components/LoginForm";
 import Register from "./components/RegisterForm";
 import { Footer } from "./components/Footer";
 import { Feed } from "./components/Feed/Feed";
+import { NewKid } from './components/NewKid';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -36,6 +37,7 @@ const protectedElement = (Component) => {
             <Route path="/" element={protectedElement(Feed)} />
             <Route path="/login" element={<LoginForm setUser={setUser} />} />
             <Route path="/register" element={<Register setUser={setUser} />} />
+            <Route path="/new-kid" element={<NewKid/>} />
           </Routes>
           {/* Conditionally render Footer if user exists */}
           {user && <Footer/>}

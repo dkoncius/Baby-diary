@@ -62,6 +62,7 @@ const SignUpForm = ({ setUser }) => {
       animate="visible"
       transition={{ duration: 0.5 }}
     >
+      <h1>Registracija</h1>
       {!success && (
         <>
           <input
