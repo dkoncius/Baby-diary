@@ -9,7 +9,6 @@ const ImageSwiper = () => {
         <Swiper
           slidesPerView={1.2}
           freeMode={true}
-          freeModeMomentum={false}
           spaceBetween={10}
           breakpoints={{
             768: {slidesPerView: 3.2}

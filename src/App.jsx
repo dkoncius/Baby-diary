@@ -21,10 +21,10 @@ function App() {
     return () => unsubscribe(); 
   }, []);
 
-  // Higher-order function to protect a component and redirect to "/login" if not authenticated
-  const protectedElement = (Component) => {
-    return user ? createElement(Component) : createElement(LoginForm);
-  };
+// Higher-order function to protect a component and redirect to "/login" if not authenticated
+const protectedElement = (Component) => {
+  return user ? <Component setUser={setUser} /> : <LoginForm setUser={setUser} />;
+};
 
   return (
     <Router className="app">
