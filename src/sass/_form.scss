@@ -50,6 +50,7 @@
     h1 {
       color: #FFF5F2;
       grid-column: span 2;
+      position: relative;
     }
   
     input {
@@ -155,7 +156,7 @@ form {
   button {
     background: $purple-color;
     border-radius: 15px;
-    color: white;
+    color: $creamy-color;
     height: 56px;
   }
 

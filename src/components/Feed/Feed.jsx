@@ -2,7 +2,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import Highlights from './Highlights';
 import MonthImage from "/assets/feed-2.jpg"
-import Login from './Login';
+import { Header } from './Header';
 
 const ImageSwiper = () => {
     return (
@@ -27,10 +27,10 @@ const ImageSwiper = () => {
   };
 
 
-export const Feed = ({user, setUser}) => {
+export const Feed = () => {
   return (
     <>
-       <Login user={user} setUser={setUser}/>
+       <Header/>
        <Highlights image={MonthImage}/>
         
         <div className="metrics">
