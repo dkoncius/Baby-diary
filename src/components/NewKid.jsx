@@ -12,31 +12,34 @@ export const NewKid = () => {
 
     return (
         <>
-        <div className="new-kid-form-image"></div>
-    
-        <motion.form
-          className='new-kid-form'
-          variants={variants}
-          initial="hidden"
-          animate="visible"
-          transition={{ duration: 0.5 }}
-        >
-          <h1>Vaiko duomenys</h1>
-          <input type="text" placeholder='Vardas Pavardė' />
-           <input 
-                type={isFocused || date ? "date" : "text"} 
-                onFocus={() => setIsFocused(true)} 
-                onBlur={() => setIsFocused(false)}
-                onChange={(e) => setDate(e.target.value)}
-                value={date}
-                placeholder="Gimimo data"
-                className="date-input"
-            />
-          <input type="number" min="0" placeholder='Ūgis' />
-          <input type="number" min="0" placeholder='Svoris' />
-          <button type="submit">IŠSAUGOTI</button>
+        <div className="new-kid-form-container">
+            <div className="new-kid-form-image"></div>
+        
+            <motion.form
+            className='new-kid-form'
+            variants={variants}
+            initial="hidden"
+            animate="visible"
+            transition={{ duration: 0.5 }}
+            >
+            <h1>Vaiko duomenys</h1>
+            <input type="text" placeholder='Vardas Pavardė' />
+            <input 
+                    type={isFocused || date ? "date" : "text"} 
+                    onFocus={() => setIsFocused(true)} 
+                    onBlur={() => setIsFocused(false)}
+                    onChange={(e) => setDate(e.target.value)}
+                    value={date}
+                    placeholder="Gimimo data"
+                    className="date-input"
+                />
+            <input type="number" min="0" placeholder='Ūgis' />
+            <input type="number" min="0" placeholder='Svoris' />
+            <button type="submit">IŠSAUGOTI</button>
 
-        </motion.form>
+            </motion.form>
+        </div>
+      
         </>
        
       );
