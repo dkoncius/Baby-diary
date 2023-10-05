@@ -1,4 +1,4 @@
-import { HiBars3 } from 'react-icons/hi2';
+import { AiOutlinePlus } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
 
 export const Header = () => {
@@ -16,7 +16,9 @@ export const Header = () => {
                 <img className="header-kid-image" src="/assets/profile-1.jpg" alt="profile-1.jpg"/>
                 <h2 className="header-kid-name">Paulius</h2>
             </div>
-            <HiBars3 className='bars' onClick={openKids}/>
+            <div className="add-memory">
+              <AiOutlinePlus className='plus'  onClick={() => navigate("/add-memory")}/>
+            </div>
         </header>
     </>
   )

@@ -32,11 +32,6 @@ header {
             font-weight: bold;
         }
     }
-
-    .bars {
-        font-size: 30px;
-        cursor: pointer;
-    }
 }
 
 .highlights {
@@ -211,22 +206,21 @@ header {
 
 
 .add-memory {
-    width: 150px;
-    height: 50px;
-    position: fixed;
-    bottom: 150px;
-    right: 0;
-    left: 0;
-    margin: auto;
-    background: white;
-    border: none;
-    border-radius: 20px;
-    box-shadow: 0 0 5px rgba(128, 128, 128, 0.342);
-    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: $purple-color;
+    color: $creamy-color;
+    border-radius: 15px;
+    width: 50px;
+    height: 45px;
+    cursor: pointer;
 
     &:hover {
-        cursor: pointer;
-        box-shadow: 0 0 5px rgba(128, 128, 128, 0.916);
-        transform: scale(0.95);
+        background: $darker-purple-color;
+    }
+
+    .plus {
+        font-size: 24px;
     }
 }
