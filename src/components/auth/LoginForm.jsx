@@ -1,8 +1,8 @@
 // LoginForm.jsx
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { auth } from '../firebase/firebase-config';
-import { signOutUser, signInWithEmail, resetPassword } from '../firebase/auth';
+import { auth } from '../../firebase/firebase-config';
+import { signOutUser, signInWithEmail, resetPassword } from '../../firebase/auth';
 import { motion } from 'framer-motion';
 
 const variants = {

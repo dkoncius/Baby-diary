@@ -5,6 +5,7 @@ import { collection, getDocs, query, doc } from 'firebase/firestore';
 import { db } from '../../firebase/firebase-config';
 import { differenceInYears, differenceInMonths, differenceInDays, parseISO } from 'date-fns';
 import { motion } from 'framer-motion';
+import { RxCross1 } from "react-icons/rx"
 
 export const Kids = ({ user }) => {
   const navigate = useNavigate();
@@ -77,7 +78,9 @@ export const Kids = ({ user }) => {
         <p className='logout' onClick={handleSignOut} disabled={loading}>
           Atsijungti
         </p>
-        <p className='kids-nav-back-to-feed' onClick={goBackToFeed}>X</p>
+        <div className="icon" onClick={() => navigate("/feed")}>
+          <RxCross1/>
+        </div>
       </nav>
       <section className='kids-container'>
         {loading ? (

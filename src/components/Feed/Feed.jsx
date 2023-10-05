@@ -13,8 +13,7 @@ const ImageSwiper = () => {
           spaceBetween={10}
           breakpoints={{
             768: {slidesPerView: 3.2}
-          }}
-        >
+          }}>
          {[1, 2, 3, 4, 5, 7, 8, 9].map((index, _, array) => (
           <SwiperSlide className="memory-image" key={index}>
             <img src={MonthImage} alt={`Slide ${index}`} />
@@ -75,8 +74,6 @@ export const Feed = () => {
                 <div className="memory-description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam repellat enim perferendis voluptas illum quod facere in nam, beatae ullam eligendi maiores blanditiis quia sed ducimus autem ex quo deserunt cum amet voluptates cupiditate itaque rerum! Natus cupiditate commodi, nesciunt, dolorum mollitia magnam cumque aperiam eligendi perspiciatis distinctio consequuntur iure.</div>
             </div>
         </div>
-     
-        <button className='add-memory'>Pridėti prisiminimą</button>
     </>
   )
 }

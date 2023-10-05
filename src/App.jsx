@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { doc, collection, query, getDocs } from 'firebase/firestore';
 import { auth, db } from './firebase/firebase-config';
-import LoginForm from "./components/LoginForm";
-import Register from "./components/RegisterForm";
-import { Feed } from "./components/Feed/Feed";
-import { Kids } from './components/Feed/Kids';
-import { NewKid } from './components/NewKid';
+import LoginForm from "./components/auth/LoginForm";
+import Register from "./components/auth/RegisterForm";
+import { Feed } from "./components/feed/Feed";
+import { Kids } from './components/kids/Kids';
+import { NewKid } from './components/kids/NewKid';
+import { AddMemory } from './components/kids/AddMemory';
 
 
 
@@ -81,6 +82,11 @@ function App() {
             user 
               ? <NewKid user={user} setUser={setUser} setHasKids={setHasKids} />
               : <Navigate to="/login" replace />
+          }/>
+          <Route path="/add-memory" element={
+            <ProtectedRouteWrapper redirectTo="/login">
+              <AddMemory user={user} setUser={setUser} />
+            </ProtectedRouteWrapper>
           }/>
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>

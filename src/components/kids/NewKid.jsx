@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { collection, addDoc } from 'firebase/firestore';
-import { db } from '../firebase/firebase-config';  // Ensure Firebase Config is Setup
+import { db } from '../../firebase/firebase-config';  // Ensure Firebase Config is Setup
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
