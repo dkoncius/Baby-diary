@@ -33,7 +33,7 @@ export const Feed = () => {
        <Highlights image={MonthImage}/>
         
         <div className="metrics">
-            <h2>Mėnesio pokyčiai</h2>
+            <h2>Mėnesio pokyčiai </h2>
             <div className="metrics-grid">
                 <div className="metric-box">
                     <p>ŪGIS</p>
