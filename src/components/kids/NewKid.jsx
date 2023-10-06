@@ -5,6 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import { AiFillPlusCircle } from "react-icons/ai";
 import { useLocalStorage } from '../../utils/localStorage';
 
+import { collection, doc, setDoc } from 'firebase/firestore';
+import { db } from '../../firebase/firebase-config';  // This import is correct based on your config file
+
+
 
 const variants = {
   hidden: { opacity: 0, y: -20 },
@@ -24,6 +28,46 @@ export const NewKid = ({user, setHasKids}) => {
     image: ''
   });
   const navigate = useNavigate();
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+  
+    const newKidData = {
+      name: kidData.name,
+      birthDate: kidData.birthDate,
+      height: kidData.height,
+      weight: kidData.weight,
+      image: "profile-image"
+    };
+  
+    // Assuming user is an object with a userId property
+    const userId = user.uid;
+
+    try {
+      await setDoc(doc(db, 'users', userId, 'kids', newKidData.name), newKidData);
+      console.log('Data saved successfully.');
+      setKidData({
+        name: '',
+        birthDate: '',
+        height: '',
+        weight: '',
+        image: ''
+      });
+
+       // Clear the file and previewUrl state as well.
+      setFile(null);
+      setPreviewUrl(null);
+
+      // Clear localStorage
+      localStorage.removeItem("kidData")
+      localStorage.removeItem('profileImage');
+
+      // Redirect to /feed.
+      navigate('/feed');
+    } catch (error) {
+      console.error('Error saving data:', error);
+    }
+  };
   
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -36,6 +80,7 @@ export const NewKid = ({user, setHasKids}) => {
 
   // utils/handleFileChange.js
   const handleFileChange = (e) => {
+    console.log("submit")
     const selectedFile = e.target.files[0];
     if (selectedFile && selectedFile.type.startsWith('image/')) {
       const reader = new FileReader();
@@ -78,8 +123,6 @@ export const NewKid = ({user, setHasKids}) => {
 
 
 
-
-
   const goBackToFeed = (e) => {
     navigate('/feed');
   }
@@ -93,7 +136,7 @@ export const NewKid = ({user, setHasKids}) => {
           initial="hidden"
           animate="visible"
           transition={{ duration: 0.5 }}
-          // onSubmit={(e) => newKidSubmit(e, user, kidId, file, kidData, setKidData, setHasKids, navigate)}
+          onSubmit={handleFormSubmit}
           required
         >
         <h1>Vaiko duomenys</h1>
@@ -103,7 +146,6 @@ export const NewKid = ({user, setHasKids}) => {
           name="image"
           placeholder="Profilio nuotrauka"
           onChange={handleFileChange}  // Update to use local handleFileChange
-          required
         />
         <label className='file-container' htmlFor="file">
             {previewUrl && (<img className="profile-image-preview" src={previewUrl} alt="Selected profile" />)}
