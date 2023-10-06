@@ -43,9 +43,11 @@
   }
   
   .new-kid-form {
+    top: 15vh;
     display: grid;
     grid-template-columns: 1fr 1fr;
     background: #A98AB8;
+    margin-bottom: 50px;
     
     h1 {
       color: #FFF5F2;
