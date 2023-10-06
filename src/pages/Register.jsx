@@ -1,7 +1,7 @@
 // SignUpForm.jsx
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { signOutUser, signUpWithEmail } from '../../firebase/auth';
+import { signOutUser, signUpWithEmail } from '../firebase/auth';
 import similar from 'string-similarity'; // new import
 import { motion } from 'framer-motion';
 

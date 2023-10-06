@@ -1,10 +1,10 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
-import { Highlights } from './Highlights'
-import { Header } from './Header';
-import { Footer } from './Footer';
+import { Header } from '../components/feed/FeedHeader';
+import { Highlights } from '../components/feed/FeedHighlights';
 
 import MonthImage from "/assets/feed-2.jpg"
+
 
 const ImageSwiper = () => {
     return (
@@ -28,7 +28,7 @@ const ImageSwiper = () => {
   };
 
 
-const FeedSection = () => {
+const Feed = () => {
   return (
     <>
        <Header/>
@@ -77,9 +77,28 @@ const FeedSection = () => {
             </div>
         </div>
 
-        <Footer/>
+        <footer>
+          <div className="container">
+              <a className='copy'>2023 © Kūdikio dienoraštis</a>
+              <div className="social">
+
+                  <a href="#">
+                      <i className="fa-brands fa-facebook"></i>
+                  </a>
+                  
+                  <a href="#">
+                      <i className="fa-brands fa-spotify"></i>
+                  </a>
+
+                  <a href="#">
+                      <i className="fa-brands fa-youtube"></i>
+                  </a>
+
+              </div>
+          </div>
+        </footer>
     </>
   )
 }
 
-export default FeedSection;
+export default Feed;

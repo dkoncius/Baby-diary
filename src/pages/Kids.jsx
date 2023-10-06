@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signOutUser } from '../../firebase/auth';
+import { signOutUser } from '../firebase/auth';
 import { collection, getDocs, query, doc } from 'firebase/firestore';
-import { db } from '../../firebase/firebase-config';
+import { db } from '../firebase/firebase-config';
 import { differenceInYears, differenceInMonths, differenceInDays, parseISO } from 'date-fns';
 import { motion } from 'framer-motion';
 import { RxCross1 } from "react-icons/rx"
