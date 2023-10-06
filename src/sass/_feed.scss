@@ -8,6 +8,26 @@ header {
     height: 100px;
     color: $darker-purple-color;
 
+    .icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: $purple-color;
+        border-radius: 15px;
+        width: 50px;
+        height: 45px;
+        cursor: pointer;
+    
+        &:hover {
+            background: $darker-purple-color;
+        }
+    
+        .plus {
+            font-size: 24px;
+            color: $creamy-color;
+        }
+    }
+
     .header-kid {
         display: flex;
         align-items: center;
@@ -205,22 +225,3 @@ header {
 }
 
 
-.add-memory {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: $purple-color;
-    color: $creamy-color;
-    border-radius: 15px;
-    width: 50px;
-    height: 45px;
-    cursor: pointer;
-
-    &:hover {
-        background: $darker-purple-color;
-    }
-
-    .plus {
-        font-size: 24px;
-    }
-}

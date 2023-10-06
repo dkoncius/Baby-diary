@@ -3,6 +3,7 @@ import 'swiper/css';
 import Highlights from './Highlights';
 import MonthImage from "/assets/feed-2.jpg"
 import { Header } from './Header';
+import { Footer } from './Footer';
 
 const ImageSwiper = () => {
     return (
@@ -74,6 +75,8 @@ export const Feed = () => {
                 <div className="memory-description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam repellat enim perferendis voluptas illum quod facere in nam, beatae ullam eligendi maiores blanditiis quia sed ducimus autem ex quo deserunt cum amet voluptates cupiditate itaque rerum! Natus cupiditate commodi, nesciunt, dolorum mollitia magnam cumque aperiam eligendi perspiciatis distinctio consequuntur iure.</div>
             </div>
         </div>
+
+        <Footer/>
     </>
   )
 }
