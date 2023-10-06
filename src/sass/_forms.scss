@@ -26,7 +26,7 @@
 
 .new-kid-form-container {
   background: #A98AB8;
-  height: 100vh;
+  min-height: 100vh;
 
   .new-kid-form-image {
     position: fixed;
@@ -52,6 +52,54 @@
       grid-column: span 2;
       position: relative;
     }
+
+    input[type="file"] {
+      display: none;
+   }
+
+   .file-container {
+    grid-column: span 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    margin-bottom: 30px;
+    cursor: pointer;
+    height: 150px;
+    width: 150px;  // Assuming a square container, adjust as necessary
+    border-radius: 150px;
+    border: 5px solid $creamy-color;
+    overflow: hidden;
+    position: relative;  // add relative position here
+
+    .profile-image-preview {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1;  // set z-index to 1 to ensure it's below the icon
+    }
+
+    
+    &:hover .icon {
+      transform: scale(1.1);
+    }
+
+    .icon {
+        position: absolute;
+        z-index: 2;  // set z-index to 2 to ensure it's above the profile-image-preview
+        font-size: 50px;
+        color: $creamy-color;
+        transition: 0.3s;
+    }
+}
   
     input {
       width: 100%;
