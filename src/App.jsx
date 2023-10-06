@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { doc, collection, query, getDocs } from 'firebase/firestore';
 import { auth, db } from './firebase/firebase-config';
-import LoginForm from "./pages/Login";
-import Register from "./pages/Register";
-import Feed from './pages/Feed';
-import { Kids } from './pages/Kids';
-import { NewKid } from './pages/NewKid';
-import { AddMemory } from './pages/AddMemory';
+import LoginForm from "./components/auth/Login";
+import Register from "./components/auth/Register";
+import FeedPage from './pages/FeedPage';
+import { Kids } from './components/kids/Kids';
+import { NewKid } from './components/kids/NewKid';
+import { AddMemory } from './components/feed/AddMemory';
 
 
 
@@ -70,7 +70,7 @@ function App() {
           }/>
           <Route path="/feed" element={
             <ProtectedRouteWrapper redirectTo="/login">
-              <Feed user={user} setUser={setUser} />
+              <FeedPage user={user} setUser={setUser} />
             </ProtectedRouteWrapper>
           }/>
           <Route path="/kids" element={

@@ -28,7 +28,7 @@ const ImageSwiper = () => {
   };
 
 
-const Feed = () => {
+const FeedPage = () => {
   return (
     <>
        <Header/>
@@ -101,4 +101,4 @@ const Feed = () => {
   )
 }
 
-export default Feed;
+export default FeedPage;

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { RxCross1 } from "react-icons/rx"
 import { AiFillPlusCircle } from "react-icons/ai"
-import ScrollableInput from '../components/addMemory/ScrollableInput';
+import ScrollableInput from '../kids/ScrollableInput';
 import { motion } from 'framer-motion';
 
 
