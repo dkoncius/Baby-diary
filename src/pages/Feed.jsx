@@ -1,6 +1,6 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
-import { Highlights } from '../components/Feed/Highlights';
+import { Highlights } from '../components/feed/Highlights'
 import { Header } from '../components/feed/Header';
 import { Footer } from '../components/feed/Footer';
 
