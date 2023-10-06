@@ -4,7 +4,7 @@ import { doc, collection, query, getDocs } from 'firebase/firestore';
 import { auth, db } from './firebase/firebase-config';
 import LoginForm from "./components/auth/LoginForm";
 import Register from "./components/auth/RegisterForm";
-import { Feed } from './components/Feed/Feed';
+import { Feed } from './components/feed/Feed';
 import { Kids } from './components/kids/Kids';
 import { NewKid } from './components/kids/NewKid';
 import { AddMemory } from './components/kids/AddMemory';

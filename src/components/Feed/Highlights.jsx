@@ -2,7 +2,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import { AiOutlineDown } from 'react-icons/ai';
 
-const Highlights = ({ image }) => {
+export const Highlights = ({ image }) => {
   return (
     <div className="highlights">
       <div className="year">2023 <AiOutlineDown /></div>
@@ -27,4 +27,3 @@ const Highlights = ({ image }) => {
     </div>
   );
 };
-export default Highlights;
