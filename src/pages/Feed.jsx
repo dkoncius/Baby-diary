@@ -1,8 +1,8 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
-import Highlights from './Highlights';
-import { Header } from './Header';
-import { Footer } from './Footer';
+import { Highlights } from '../components/Feed/Highlights';
+import { Header } from '../components/feed/Header';
+import { Footer } from '../components/feed/Footer';
 
 import MonthImage from "/assets/feed-2.jpg"
 
