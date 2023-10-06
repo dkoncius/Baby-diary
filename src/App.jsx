@@ -4,7 +4,7 @@ import { doc, collection, query, getDocs } from 'firebase/firestore';
 import { auth, db } from './firebase/firebase-config';
 import LoginForm from "./components/auth/LoginForm";
 import Register from "./components/auth/RegisterForm";
-import { Feed } from './components/feed/FeedSection';
+import FeedSection from './components/feed/FeedSection';
 import { Kids } from './components/kids/Kids';
 import { NewKid } from './components/kids/NewKid';
 import { AddMemory } from './components/kids/AddMemory';
@@ -70,7 +70,7 @@ function App() {
           }/>
           <Route path="/feed" element={
             <ProtectedRouteWrapper redirectTo="/login">
-              <Feed user={user} setUser={setUser} />
+              <FeedSection user={user} setUser={setUser} />
             </ProtectedRouteWrapper>
           }/>
           <Route path="/kids" element={
