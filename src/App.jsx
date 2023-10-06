@@ -8,6 +8,7 @@ import FeedPage from './pages/FeedPage';
 import { Kids } from './components/kids/Kids';
 import { NewKid } from './components/kids/NewKid';
 import { AddMemory } from './components/feed/AddMemory';
+import { UserProvider } from './components/context/UserContext';
 
 
 
@@ -58,42 +59,44 @@ function App() {
   
 
   return (
-    <Router className="app">
-      {isAuthChecked ? (
-        <Routes>
-          <Route path="/login" element={<LoginForm setUser={setUser} />} />
-          <Route path="/register" element={<Register setUser={setUser} />} />
-          <Route path="/" element={
-            <ProtectedRouteWrapper redirectTo="/login">
-              <Navigate to="/feed" replace />
-            </ProtectedRouteWrapper>
-          }/>
-          <Route path="/feed" element={
-            <ProtectedRouteWrapper redirectTo="/login">
-              <FeedPage user={user} setUser={setUser} />
-            </ProtectedRouteWrapper>
-          }/>
-          <Route path="/kids" element={
-            <ProtectedRouteWrapper redirectTo="/login">
-              <Kids user={user} setUser={setUser} />
-            </ProtectedRouteWrapper>
-          }/>
-          <Route path="/new-kid" element={
-            user 
-              ? <NewKid user={user} setUser={setUser} setHasKids={setHasKids} />
-              : <Navigate to="/login" replace />
-          }/>
-          <Route path="/add-memory" element={
-            <ProtectedRouteWrapper redirectTo="/login">
-              <AddMemory user={user} setUser={setUser} />
-            </ProtectedRouteWrapper>
-          }/>
-          <Route path="*" element={<Navigate to="/login" replace />} />
-        </Routes>
-      ) : (
-        <p>Loading...</p>
-      )}
-    </Router>
+    <UserProvider>
+      <Router className="app">
+        {isAuthChecked ? (
+          <Routes>
+            <Route path="/login" element={<LoginForm setUser={setUser} />} />
+            <Route path="/register" element={<Register setUser={setUser} />} />
+            <Route path="/" element={
+              <ProtectedRouteWrapper redirectTo="/login">
+                <Navigate to="/feed" replace />
+              </ProtectedRouteWrapper>
+            }/>
+            <Route path="/feed" element={
+              <ProtectedRouteWrapper redirectTo="/login">
+                <FeedPage user={user} setUser={setUser} />
+              </ProtectedRouteWrapper>
+            }/>
+            <Route path="/kids" element={
+              <ProtectedRouteWrapper redirectTo="/login">
+                <Kids user={user} setUser={setUser} />
+              </ProtectedRouteWrapper>
+            }/>
+            <Route path="/new-kid" element={
+              user 
+                ? <NewKid user={user} setUser={setUser} setHasKids={setHasKids} />
+                : <Navigate to="/login" replace />
+            }/>
+            <Route path="/add-memory" element={
+              <ProtectedRouteWrapper redirectTo="/login">
+                <AddMemory user={user} setUser={setUser} />
+              </ProtectedRouteWrapper>
+            }/>
+            <Route path="*" element={<Navigate to="/login" replace />} />
+          </Routes>
+        ) : (
+          <p>Loading...</p>
+        )}
+      </Router>
+    </UserProvider>
   );
 }
 
