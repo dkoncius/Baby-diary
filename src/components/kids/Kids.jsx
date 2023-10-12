@@ -1,17 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-import { signOutUser } from '../../firebase/auth';
-import { collection, getDocs, query, doc } from 'firebase/firestore';
-import { db } from '../../firebase/firebase-config';
-
-import { motion } from 'framer-motion';
-
-import { differenceInYears, differenceInMonths, differenceInDays, parseISO } from 'date-fns';
-import { RxCross1 } from "react-icons/rx";
-import { FaBirthdayCake } from "react-icons/fa";
-import { GiSandsOfTime } from "react-icons/gi";
-import { BsFillPencilFill } from "react-icons/bs";
+import { KidsList } from './KidsList';
+import { Nav } from './Nav';
+import { collection, getDocs, query, doc, getFirestore } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
 export const Kids = ({ user }) => {
   const navigate = useNavigate();
@@ -25,7 +17,12 @@ export const Kids = ({ user }) => {
         if (!user) {
           return; 
         }
-        const kidsRef = collection(doc(db, 'users', user.uid), 'kids');
+
+        const db = getFirestore(); // Make sure to initialize your Firestore
+        const auth = getAuth(); // Only if you use Firebase Auth
+        const currentUser = auth.currentUser; // Only if you use Firebase Auth
+        
+        const kidsRef = collection(doc(db, 'users', currentUser.uid), 'kids'); // Ensure you get the uid from Firebase Auth if you're using it
         const kidsQuery = query(kidsRef);
         const kidDocs = await getDocs(kidsQuery);
 
@@ -42,81 +39,10 @@ export const Kids = ({ user }) => {
     fetchKids();
   }, [user]);
 
-  const calculateAge = (birthDate) => {
-    const birthdate = parseISO(birthDate);
-    const years = differenceInYears(new Date(), birthdate);
-    const months = differenceInMonths(new Date(), birthdate) % 12;
-    const days = differenceInDays(new Date(), birthdate) % 30; // Approximation
-    return `${years} m. ${months} mėn. ${days} d.`;
-  };
-
-  const handleSignOut = async () => {
-    try {
-      setLoading(true);
-      await signOutUser();
-    } catch (error) {
-      console.error('Error signing out: ', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const goBackToFeed = () => {
-      navigate("/feed")
-  }
-
-  // Animation
-  const variants = {
-    hidden: { opacity: 0, x: 200 },
-    visible: { opacity: 1, x: 0 },
-  };
-
   return (
     <>
-      <motion.section 
-        className="kids-section"
-        variants={variants}
-        initial="hidden"
-        animate="visible"
-        transition={{ duration: 0.5 }}
-      >
-        <nav className='kids-nav'>
-          <p className='logout' onClick={handleSignOut} disabled={loading}>
-            Atsijungti
-          </p>
-          <div className="icon" onClick={() => navigate("/feed")}>
-            <RxCross1/>
-          </div>
-        </nav>
-        <section className='kids-container'>
-          {loading ? (
-            <p>Loading...</p>
-          ) : error ? (
-            <p>{error}</p>
-          ) : (
-            <>
-              {kids.map((kid) => (
-                <div className='kid' key={kid.id}>
-                  <BsFillPencilFill className='edit'/>
-                  <img 
-                    className='kid-image' 
-                    src={kid.image || '/assets/profile-1.jpg'} 
-                    alt={`profile-of-${kid.name}`} 
-                  />
-                  <div className='kid-data'>
-                    <h2 className='kid-name'>{kid.name}</h2>
-                    <p className='kid-birthday'><FaBirthdayCake/> {kid.birthDate}</p>
-                    <p className='kid-age'><GiSandsOfTime/> {calculateAge(kid.birthDate)}</p>
-                  </div>
-                </div>
-              ))}
-              <button className='new-kid-button' onClick={() => navigate('/new-kid')}>
-                + Pridėti vaiką
-              </button>
-            </>
-          )}
-        </section>
-      </motion.section>
+      <Nav user={user} />
+      {loading ? 'Loading...' : error ? error : <KidsList kids={kids} setKids={setKids} user={user} />}
     </>
   );
-}
+};

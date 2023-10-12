@@ -6,9 +6,8 @@ import LoginForm from "./components/auth/Login";
 import Register from "./components/auth/Register";
 import FeedPage from './pages/FeedPage';
 import { Kids } from './components/kids/Kids';
-import { NewKid } from './components/kids/NewKid';
+import NewKid from './components/new-kid/NewKid';
 import { AddMemory } from './components/feed/AddMemory';
-import { UserProvider } from './components/context/UserContext';
 
 
 
@@ -59,7 +58,6 @@ function App() {
   
 
   return (
-    <UserProvider>
       <Router className="app">
         {isAuthChecked ? (
           <Routes>
@@ -96,7 +94,6 @@ function App() {
           <p>Loading...</p>
         )}
       </Router>
-    </UserProvider>
   );
 }
 
