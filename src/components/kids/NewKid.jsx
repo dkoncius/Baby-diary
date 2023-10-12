@@ -4,8 +4,10 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { AiFillPlusCircle } from "react-icons/ai";
 import { useLocalStorage } from '../../utils/localStorage';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { imageConfig, readAndCompressImage } from 'browser-image-resizer';
 
-import { collection, doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc } from 'firebase/firestore';
 import { db } from '../../firebase/firebase-config';  // This import is correct based on your config file
 
 
@@ -15,7 +17,7 @@ const variants = {
   visible: { opacity: 1, y: 0 },
 };
 
-export const NewKid = ({user, setHasKids}) => {
+export const NewKid = ({user}) => {
   const [file, setFile] = useState(null)
   const [previewUrl, setPreviewUrl] = useState(null);
 
@@ -27,25 +29,85 @@ export const NewKid = ({user, setHasKids}) => {
     weight: '',
     image: ''
   });
+   // Converts data URL to Blob
+   const dataURLtoBlob = (dataurl) => {
+    let arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+    while(n--){
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new Blob([u8arr], {type:mime});
+  }
+
+
   const navigate = useNavigate();
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+
+     // Validate Image
+    if (!file && !previewUrl) {
+      alert('Pasirinkite nuotrauką :)');
+      return;
+    }
   
+    // Original newKidData
     const newKidData = {
       name: kidData.name,
       birthDate: kidData.birthDate,
       height: kidData.height,
       weight: kidData.weight,
-      image: "profile-image"
+      image: "profile-image" // Temporary placeholder
     };
-  
+
+    const imageConfig = {
+      quality: 0.7,
+      maxWidth: 800,
+      maxHeight: 800,
+      autoRotate: true,
+      debug: true
+    };
+    
+    
     // Assuming user is an object with a userId property
     const userId = user.uid;
-
+  
     try {
+     // If a file is selected for upload or if previewUrl exists...
+    if (file || previewUrl) {
+      let uploadFile;
+
+      if (file) {
+        uploadFile = file;
+      } else if (previewUrl) {
+        const imageBlob = dataURLtoBlob(previewUrl);
+        uploadFile = new File([imageBlob], "filename.jpg", {type: imageBlob.type});
+      } else {
+        alert('No image file is selected for upload. Please choose an image.');
+        return;
+      }
+
+       // Resize the image
+       const resizedImage = await readAndCompressImage(uploadFile, imageConfig);
+      
+       // Firebase storage reference
+       const storage = getStorage();
+       const filePath = `users/${userId}/kids/${newKidData.name}/profile-image/${uploadFile.name}`;
+       const storageRef = ref(storage, filePath);
+ 
+       // Upload the resized image to Firebase storage
+       await uploadBytes(storageRef, resizedImage);
+       
+       // Get download URL of uploaded file and update newKidData
+       newKidData.image = await getDownloadURL(storageRef);
+      
+    }
+  
+      // Save newKidData to Firestore
       await setDoc(doc(db, 'users', userId, 'kids', newKidData.name), newKidData);
-      console.log('Data saved successfully.');
+      console.log('Data and image saved successfully.');
+      
+      // Reset states and local storage
       setKidData({
         name: '',
         birthDate: '',
@@ -53,25 +115,21 @@ export const NewKid = ({user, setHasKids}) => {
         weight: '',
         image: ''
       });
-
-       // Clear the file and previewUrl state as well.
       setFile(null);
       setPreviewUrl(null);
-
-      // Clear localStorage
-      localStorage.removeItem("kidData")
+      localStorage.removeItem("kidData");
       localStorage.removeItem('profileImage');
-
-      // Redirect to /feed.
+  
+      // Navigate to /feed.
       navigate('/feed');
     } catch (error) {
-      console.error('Error saving data:', error);
+      console.error('Error saving data or uploading image:', error);
     }
   };
   
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setKidData(prevData => ({
+    setKidData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
@@ -137,7 +195,6 @@ export const NewKid = ({user, setHasKids}) => {
           animate="visible"
           transition={{ duration: 0.5 }}
           onSubmit={handleFormSubmit}
-          required
         >
         <h1>Vaiko duomenys</h1>
         <input
@@ -145,7 +202,7 @@ export const NewKid = ({user, setHasKids}) => {
           type="file"
           name="image"
           placeholder="Profilio nuotrauka"
-          onChange={handleFileChange}  // Update to use local handleFileChange
+          onChange={handleFileChange}
         />
         <label className='file-container' htmlFor="file">
             {previewUrl && (<img className="profile-image-preview" src={previewUrl} alt="Selected profile" />)}

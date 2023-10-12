@@ -8,10 +8,10 @@ import { db } from '../../firebase/firebase-config';
 import { motion } from 'framer-motion';
 
 import { differenceInYears, differenceInMonths, differenceInDays, parseISO } from 'date-fns';
-import { RxCross1 } from "react-icons/rx"
-import { FaBirthdayCake } from "react-icons/fa"
-import { GiSandsOfTime } from "react-icons/gi"
-import { BsFillPencilFill } from "react-icons/bs"
+import { RxCross1 } from "react-icons/rx";
+import { FaBirthdayCake } from "react-icons/fa";
+import { GiSandsOfTime } from "react-icons/gi";
+import { BsFillPencilFill } from "react-icons/bs";
 
 export const Kids = ({ user }) => {
   const navigate = useNavigate();
@@ -23,7 +23,7 @@ export const Kids = ({ user }) => {
     const fetchKids = async () => {
       try {
         if (!user) {
-          return; // Exit early if there's no user
+          return; 
         }
         const kidsRef = collection(doc(db, 'users', user.uid), 'kids');
         const kidsQuery = query(kidsRef);
@@ -73,47 +73,50 @@ export const Kids = ({ user }) => {
 
   return (
     <>
-    <motion.section 
-    className="kids-section"
-    variants={variants}
-    initial="hidden"
-    animate="visible"
-    transition={{ duration: 0.5 }}
-    >
-      <nav className='kids-nav'>
-        <p className='logout' onClick={handleSignOut} disabled={loading}>
-          Atsijungti
-        </p>
-        <div className="icon" onClick={() => navigate("/feed")}>
-          <RxCross1/>
-        </div>
-      </nav>
-      <section className='kids-container'>
-        {loading ? (
-          <p>Loading...</p>
-        ) : error ? (
-          <p>{error}</p>
-        ) : (
-          <>
-            {kids.map((kid) => (
-              <div className='kid' key={kid.id}>
-                <BsFillPencilFill className='edit'/>
-                <img className='kid-image' src='/assets/profile-1.jpg' alt={`profile-of-${kid.name}`} />
-                <div className='kid-data'>
-                  <h2 className='kid-name'>{kid.name}</h2>
-                  <p className='kid-birthday'><FaBirthdayCake/> {kid.birthDate}</p>
-                  <p className='kid-age'><GiSandsOfTime/> {calculateAge(kid.birthDate)}</p>
+      <motion.section 
+        className="kids-section"
+        variants={variants}
+        initial="hidden"
+        animate="visible"
+        transition={{ duration: 0.5 }}
+      >
+        <nav className='kids-nav'>
+          <p className='logout' onClick={handleSignOut} disabled={loading}>
+            Atsijungti
+          </p>
+          <div className="icon" onClick={() => navigate("/feed")}>
+            <RxCross1/>
+          </div>
+        </nav>
+        <section className='kids-container'>
+          {loading ? (
+            <p>Loading...</p>
+          ) : error ? (
+            <p>{error}</p>
+          ) : (
+            <>
+              {kids.map((kid) => (
+                <div className='kid' key={kid.id}>
+                  <BsFillPencilFill className='edit'/>
+                  <img 
+                    className='kid-image' 
+                    src={kid.image || '/assets/profile-1.jpg'} 
+                    alt={`profile-of-${kid.name}`} 
+                  />
+                  <div className='kid-data'>
+                    <h2 className='kid-name'>{kid.name}</h2>
+                    <p className='kid-birthday'><FaBirthdayCake/> {kid.birthDate}</p>
+                    <p className='kid-age'><GiSandsOfTime/> {calculateAge(kid.birthDate)}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
-            <button className='new-kid-button' onClick={() => navigate('/new-kid')}>
-              + Pridėti vaiką
-            </button>
-          </>
-        )}
-      </section>
-    </motion.section>
-    
+              ))}
+              <button className='new-kid-button' onClick={() => navigate('/new-kid')}>
+                + Pridėti vaiką
+              </button>
+            </>
+          )}
+        </section>
+      </motion.section>
     </>
   );
-};
+}

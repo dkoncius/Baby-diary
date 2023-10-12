@@ -1,3 +1,4 @@
+## Firestore Database Schema
 users (collection)
 │
 └── [userId] (document)
@@ -6,30 +7,47 @@ users (collection)
     │
     └── kids (subcollection)
         │
-        ├── [kidName] (document)
+        ├── [kidId] (document)
         │   ├── name: "Kid Name"
         │   ├── birthDate: "yyyy-mm-dd"
         │   ├── height: number
-        │   └── weight: number
-        │   └── image: string
+        │   ├── weight: number
+        │   ├── profileImage: "path/to/image.jpg"
         │
-        └── [anotherKidName] (document)
+        └── [kidId] (document)
             ├── name: "Another Kid Name"
             ├── birthDate: "yyyy-mm-dd"
             ├── height: number
-            └── weight: number
+            ├── weight: number
+            ├── profileImage: "path/to/image.jpg"
+            │
+            └── memories (subcollection)
+                │
+                ├── [memoryId] (document)
+                │   ├── description: "Description of the memory"
+                │   ├── date: "yyyy-mm-dd"
+                │   └── images: ["path/to/image1.jpg", "path/to/image2.jpg", ...]
+                │
+                └── [memoryId] (document)
+                    ├── description: "Another Description"
+                    ├── date: "yyyy-mm-dd"
+                    └── images: ["path/to/image3.jpg", "path/to/image4.jpg", ...]
 
 
-Cloud storage for images
-- users
-  - {userId}
-    - {kidId}
-      - images
-        - profile-image
-          - image (e.g., profile-pic.jpg)
-        - memories
-          - {memory}
-            - memory-images
-              - image1 (e.g., memory-pic1.jpg)
-              - image2 (e.g., memory-pic2.jpg)
-              - ...
+## Cloud Storage Schema
+users (directory)
+│
+└── [userId] (directory)
+    │
+    └── [kidId] (directory)
+        │
+        ├── profile-image (directory)
+        │   └── image (e.g., profile-pic.jpg)
+        │
+        └── memories (directory)
+            │
+            └── [memoryId] (directory)
+                ├── image1 (e.g., memory-pic1.jpg)
+                ├── image2 (e.g., memory-pic2.jpg)
+                └── ...
+

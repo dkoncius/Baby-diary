@@ -101,7 +101,11 @@
         color: $creamy-color;
         transition: 0.3s;
     }
-}
+  }
+
+  .file-container.no-preview {
+    background-color: #ffc0c0; /* or whatever color/style you prefer when there's no preview */
+  }
   
     input {
       width: 100%;
