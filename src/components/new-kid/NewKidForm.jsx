@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import ImageUploader from './ImageUploader';
 
@@ -13,13 +13,22 @@ const NewKidForm = ({
   previewUrl,
   setPreviewUrl,
   isFocused,
+  setIsFocused,
   kidData,
-  handleFileChange,
   handleInputChange,
   handleFormSubmit,
   goBackToFeed,
 }) => {
-  const [isImageSelected, setIsImageSelected] = useState(false);
+  const canSubmit = file || previewUrl;
+
+
+   // Load image from localStorage upon component mount.
+   useEffect(() => {
+    const savedImage = localStorage.getItem('profileImage');
+    if (savedImage) {
+      setPreviewUrl(savedImage);
+    }
+  }, []);
 
   const handleImageChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -49,7 +58,7 @@ const NewKidForm = ({
     >
       <h1>Vaiko duomenys</h1>
       {/* Use the ImageUploader component here */}
-      <ImageUploader previewUrl={previewUrl} handleFileChange={handleImageChange} />
+      <ImageUploader previewUrl={previewUrl} handleImageChange={handleImageChange} />
       <input
         type="text"
         name="name"
@@ -67,6 +76,7 @@ const NewKidForm = ({
         value={kidData.birthDate || ''}
         placeholder="Gimimo data"
         className="date-input"
+        required
       />
       <input
         type="number"
@@ -88,7 +98,9 @@ const NewKidForm = ({
         onChange={handleInputChange}
         required
       />
-      <button type="submit">IŠSAUGOTI</button>
+       <button type="submit" disabled={!canSubmit}>
+        IŠSAUGOTI
+      </button>
       <button type="button" onClick={() => goBackToFeed()}>IŠEITI</button>
     </motion.form>
   );

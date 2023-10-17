@@ -1,7 +1,7 @@
 import React from 'react';
 import { AiFillPlusCircle } from 'react-icons/ai';
 
-const ImageUploader = ({ previewUrl, handleFileChange }) => {
+const ImageUploader = ({ previewUrl, handleImageChange }) => {
   return (
     <>
       <input
@@ -9,7 +9,7 @@ const ImageUploader = ({ previewUrl, handleFileChange }) => {
           type="file"
           name="image"
           placeholder="Profilio nuotrauka"
-          onChange={handleFileChange}
+          onChange={handleImageChange}
         />
         <label className='file-container' htmlFor="file">
             {previewUrl && (<img className="profile-image-preview" src={previewUrl} alt="Selected profile" />)}

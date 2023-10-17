@@ -14,8 +14,8 @@ const LoginForm = ({ setUser }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const navigate = useNavigate();
   const [resetRequested, setResetRequested] = useState(false);
+  const navigate = useNavigate();
 
   const getErrorMessage = (firebaseError) => {
     switch (firebaseError) {

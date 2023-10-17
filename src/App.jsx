@@ -6,10 +6,9 @@ import LoginForm from "./components/auth/Login";
 import Register from "./components/auth/Register";
 import FeedPage from './pages/FeedPage';
 import { Kids } from './components/kids/Kids';
+import { UpdateKid } from './components/kids/UpdateKid';
 import NewKid from './components/new-kid/NewKid';
 import { AddMemory } from './components/feed/AddMemory';
-
-
 
 function App() {
   const [user, setUser] = useState(null);
@@ -77,6 +76,11 @@ function App() {
               <ProtectedRouteWrapper redirectTo="/login">
                 <Kids user={user} setUser={setUser} />
               </ProtectedRouteWrapper>
+            }/>
+            <Route path="/update-kid" element={
+              user 
+                ? <UpdateKid user={user} setUser={setUser} />
+                : <Navigate to="/login" replace />
             }/>
             <Route path="/new-kid" element={
               user 

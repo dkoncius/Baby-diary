@@ -17,8 +17,8 @@ export const Kid = ({ kid, onDelete  }) => {
     return `${years} years, ${months} months, ${days} days`;
   }, []);
 
-  const handleEdit = () => {
-    navigate('/new-kid', { state: { kidToEdit: kid } });
+const handleEdit = () => {
+  navigate('/update-kid', { state: { kidToEdit: kid } });
 };
 
 
