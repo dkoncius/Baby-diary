@@ -1,3 +1,7 @@
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { getFirestore, doc, collection, query, getDocs, limit } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import { Header } from '../components/feed/FeedHeader';
@@ -28,10 +32,61 @@ const ImageSwiper = () => {
   };
 
 
-const FeedPage = () => {
+
+
+const FeedPage = ({user}) => {
+  const [loading, setLoading] = useState(true);
+  const [kidData, setKidData] = useState(null);
+  const location = useLocation();
+
+  const fetchFirstKid = async () => {
+
+    try {
+      if (!user) {
+        return;
+      }
+
+      const db = getFirestore(); // Make sure to initialize your Firestore
+      const auth = getAuth(); // Only if you use Firebase Auth
+      const currentUser = auth.currentUser; // Only if you use Firebase Auth
+
+      const kidsRef = collection(doc(db, 'users', currentUser.uid), 'kids'); // Ensure you get the uid from Firebase Auth if you're using it
+      const kidsQuery = query(kidsRef, limit(1));  // Limit the query to retrieve only the first document
+      const kidDocs = await getDocs(kidsQuery);
+
+      if (!kidDocs.empty) {
+        const firstKidData = { id: kidDocs.docs[0].id, ...kidDocs.docs[0].data() };  // Get data of the first kid
+        console.log(firstKidData)
+        setKidData(firstKidData)
+      } else {
+        console.log('No kids data found');
+      }
+    } catch (error) {
+      console.error('Error fetching first kid: ', error);
+      setError('Failed to fetch first kid data, please try again later.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+
+   if (location.state && location.state.kidToFeed) {
+    setKidData(location.state.kidToFeed);
+    setLoading(false); 
+  } else {
+    fetchFirstKid();
+  }
+  }, [user, location.state])
+
+  
+
   return (
     <>
-       <Header/>
+      {!loading && 
+       <Header kidData={kidData}/>
+      }
+      
        <Highlights image={MonthImage}/>
         
         <div className="metrics">

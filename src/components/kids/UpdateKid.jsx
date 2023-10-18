@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { getFirestore, doc, collection, query, getDocs, limit, setDoc } from 'firebase/firestore';  // Import setDoc
+import { getFirestore, doc, collection, query, getDocs, limit, setDoc, deleteDoc } from 'firebase/firestore';
+import { db } from '../../firebase/firebase-config';
 import { getAuth } from 'firebase/auth';
 import { UpdateKidForm } from "./UpdateKidForm"
 
 
 export const UpdateKid = ({user}) => {
     const [loading, setLoading] = useState(true);
-    const [kidData, setKidData] = useState(null);  // Initially set to null
+    const [kidData, setKidData] = useState(null);
     const navigate = useNavigate();
     const location = useLocation();  // Add this line
 
@@ -52,8 +53,8 @@ export const UpdateKid = ({user}) => {
       }, [user, location.state])
 
 
-    const goBackToFeed = () => {
-        navigate('/feed');
+    const goBackToKids = () => {
+        navigate('/kids');
       };
 
       const handleInputChange = (e) => {
@@ -88,10 +89,21 @@ export const UpdateKid = ({user}) => {
             const userRef = doc(db, 'users', user.uid, 'kids', kidData.id);
             await setDoc(userRef, kidData, { merge: true });
             console.log('Kid data updated successfully');
-            goBackToFeed();  // Navigate back to feed after successful update
+            goBackToKids();  // Navigate back to feed after successful update
         } catch (error) {
             console.error('Error updating kid data:', error);
         }
+    };
+
+    const deleteKid = async (kidId) => {
+      try {
+        const kidRef = doc(db, 'users', user.uid, 'kids', kidId);
+        await deleteDoc(kidRef);
+        // Navigate back to /kids with a state to signal the list to refresh
+        navigate('/kids', { state: { lastDeletedKidId: kidId } });
+      } catch (error) {
+        console.error("Error deleting kid:", error);
+      }
     };
 
     return (
@@ -103,7 +115,8 @@ export const UpdateKid = ({user}) => {
                   handleInputChange={handleInputChange}
                   handleFormSubmit={handleFormSubmit}
                   handleImageChange={handleImageChange}
-                  goBackToFeed={goBackToFeed}
+                  deleteKid={deleteKid}
+                  goBackToKids={goBackToKids}
               />
           )}
       </div>

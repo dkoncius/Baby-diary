@@ -111,8 +111,8 @@ const NewKid = ({ user }) => {
       setPreviewUrl(null);
       localStorage.removeItem('kidData');
       localStorage.removeItem('profileImage');
-  
-      navigate('/feed');
+
+      navigate('/feed', { state: { kidToFeed: newKidData, refresh: true } });
     } catch (error) {
       console.error('Error saving data or uploading image:', error);
       // Optionally, you can provide a user-friendly error message here
@@ -146,7 +146,6 @@ const NewKid = ({ user }) => {
       console.error('The selected file is not a valid image or no file was selected.');
     }
   };
-  
 
   const goBackToFeed = () => {
     navigate('/feed');

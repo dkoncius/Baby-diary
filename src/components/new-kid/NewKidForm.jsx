@@ -18,6 +18,7 @@ const NewKidForm = ({
   handleInputChange,
   handleFormSubmit,
   goBackToFeed,
+  handleImageChange
 }) => {
   const canSubmit = file || previewUrl;
 
@@ -29,23 +30,6 @@ const NewKidForm = ({
       setPreviewUrl(savedImage);
     }
   }, []);
-
-  const handleImageChange = (e) => {
-    const selectedFile = e.target.files[0];
-    if (selectedFile && selectedFile.type.startsWith('image/')) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const dataUrl = event.target.result;
-        localStorage.setItem('profileImage', dataUrl);
-        setPreviewUrl(dataUrl); // Use setPreviewUrl from props
-        setFile(selectedFile);
-        setIsImageSelected(true);
-      };
-      reader.readAsDataURL(selectedFile);
-    } else {
-      console.error('The selected file is not an image or no file was selected.');
-    }
-  };
 
   return (
     <motion.form

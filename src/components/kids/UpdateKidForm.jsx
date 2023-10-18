@@ -2,13 +2,18 @@ import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import ImageUploader from '../new-kid/ImageUploader';
 
-
-export const UpdateKidForm = ({kidData, handleInputChange, handleFormSubmit,handleImageChange, goBackToFeed}) => {
+export const UpdateKidForm = ({kidData, handleInputChange, handleFormSubmit,handleImageChange, goBackToKids, deleteKid }) => {
   const variants = {
     hidden: { opacity: 0, y: -20 },
     visible: { opacity: 1, y: 0 },
   };
 
+  const handleDelete = () => {
+    if(window.confirm(`Ar tikrai norite ištrinti ${kidData.name}?`)) {
+      deleteKid(kidData.id);
+      goBackToKids();
+    }
+  };
 
   return (
         <motion.form
@@ -62,7 +67,10 @@ export const UpdateKidForm = ({kidData, handleInputChange, handleFormSubmit,hand
        <button type="submit">
         IŠSAUGOTI
       </button>
-      <button type="button" onClick={() => goBackToFeed()}>IŠEITI</button>
+       <button type="button" className='delete' onClick={handleDelete}>
+        IŠTRINTI
+      </button>
+      <button type="button" onClick={() => goBackToKids()}>IŠEITI</button>
     </motion.form>
   )
 }

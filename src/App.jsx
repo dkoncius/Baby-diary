@@ -74,7 +74,7 @@ function App() {
             }/>
             <Route path="/kids" element={
               <ProtectedRouteWrapper redirectTo="/login">
-                <Kids user={user} setUser={setUser} />
+                <Kids key={location.state?.lastDeletedKidId} user={user} setUser={setUser} />
               </ProtectedRouteWrapper>
             }/>
             <Route path="/update-kid" element={

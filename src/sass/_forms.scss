@@ -213,10 +213,19 @@ form {
     border-radius: 15px;
     color: $creamy-color;
     height: 56px;
+
+    &:hover {
+      background: $darker-purple-color;
+    }
   }
 
-  button:hover {
-    background: $darker-purple-color;
+
+  button.delete {
+    background: crimson;
+
+    &:hover {
+      background: rgb(157, 15, 43);
+    }
   }
   
   .userNotFound {

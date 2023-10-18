@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { KidsList } from './KidsList';
 import { Nav } from './Nav';
 import { collection, getDocs, query, doc, getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 
 export const Kids = ({ user }) => {
-  const navigate = useNavigate();
+  const location = useLocation(); 
   const [loading, setLoading] = useState(true);
   const [kids, setKids] = useState([]);
   const [error, setError] = useState(null);
