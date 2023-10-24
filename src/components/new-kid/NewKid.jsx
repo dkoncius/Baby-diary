@@ -10,6 +10,7 @@ import { doc, setDoc } from 'firebase/firestore';
 import { db } from '../../firebase/firebase-config';
 
 const NewKid = ({ user }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [file, setFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [isFocused, setIsFocused] = useState(false);
@@ -42,6 +43,7 @@ const NewKid = ({ user }) => {
   
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
   
     const newKidData = {
       name: kidData.name,
@@ -113,6 +115,8 @@ const NewKid = ({ user }) => {
       localStorage.removeItem('profileImage');
 
       navigate('/feed', { state: { kidToFeed: newKidData, refresh: true } });
+      setIsSubmitting(false); 
+
     } catch (error) {
       console.error('Error saving data or uploading image:', error);
       // Optionally, you can provide a user-friendly error message here
@@ -178,6 +182,7 @@ const NewKid = ({ user }) => {
         handleInputChange={handleInputChange}
         handleFormSubmit={handleFormSubmit}
         goBackToFeed={goBackToFeed}
+        isSubmitting={isSubmitting}
       />
     </div>
   );

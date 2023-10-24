@@ -18,9 +18,10 @@ const NewKidForm = ({
   handleInputChange,
   handleFormSubmit,
   goBackToFeed,
-  handleImageChange
+  handleImageChange,
+  isSubmitting
 }) => {
-  const canSubmit = file || previewUrl;
+  const canSubmit = (file || previewUrl) && !isSubmitting;
 
 
    // Load image from localStorage upon component mount.

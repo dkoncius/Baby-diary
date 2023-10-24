@@ -47,13 +47,40 @@ function App() {
     }
   }; 
   
+  
+
   function ProtectedRouteWrapper({ children, redirectTo }) {
+    const [hasKids, setHasKids] = useState(false);
+    const [loading, setLoading] = useState(true);
+
+    // Fetch hasKids status
+    const fetchHasKids = async () => {
+        if (!user) {
+            setLoading(false);
+            return;
+        }
+
+        const hasKidsStatus = await checkIfUserHasKids(user.uid);
+        setHasKids(hasKidsStatus);
+        setLoading(false);
+    };
+
+    // Use the effect hook to fetch hasKids status when the user logs in
+    useEffect(() => {
+        fetchHasKids();
+    }, [user]);
+
+    // While loading, return a loading state or null
+    if (loading) {
+        return null; // or return a loading spinner/component
+    }
+
     return (
-      user 
-        ? (hasKids ? children : <Navigate to="/new-kid" replace />)
-        : <Navigate to={redirectTo} replace />
+        user 
+            ? (hasKids ? children : <Navigate to="/new-kid" replace />)
+            : <Navigate to={redirectTo} replace />
     );
-  }
+}
   
 
   return (

@@ -70,14 +70,14 @@ const FeedPage = ({user}) => {
   };
 
   useEffect(() => {
+    if (location.state && location.state.kidToFeed) {
+       setKidData(location.state.kidToFeed);
+       setLoading(false);
+    } else {
+       fetchFirstKid();
+    }
+ }, [user, location.state]);
 
-   if (location.state && location.state.kidToFeed) {
-    setKidData(location.state.kidToFeed);
-    setLoading(false); 
-  } else {
-    fetchFirstKid();
-  }
-  }, [user, location.state])
 
   
 
