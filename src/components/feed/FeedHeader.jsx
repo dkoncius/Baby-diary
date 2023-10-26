@@ -2,9 +2,7 @@ import { AiOutlinePlus } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
 
 export const Header = ({kidData}) => {
-  console.log(kidData)
-
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   return (
     <>

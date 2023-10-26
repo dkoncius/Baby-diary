@@ -9,7 +9,6 @@ const variants = {
 
 const NewKidForm = ({
   file,
-  setFile,
   previewUrl,
   setPreviewUrl,
   isFocused,

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { getFirestore, doc, collection, query, getDocs, limit } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
@@ -9,6 +9,7 @@ import { Highlights } from '../components/feed/FeedHighlights';
 
 import MonthImage from "/assets/feed-2.jpg"
 
+import { UserContext } from '../contexts/UserContext'
 
 const ImageSwiper = () => {
     return (
@@ -29,40 +30,38 @@ const ImageSwiper = () => {
         </Swiper>
       </div>
     );
-  };
+};
 
 
-
-
-const FeedPage = ({user}) => {
+const FeedPage = () => {
+  const { user, kidData, setKidData } = useContext(UserContext);
   const [loading, setLoading] = useState(true);
-  const [kidData, setKidData] = useState(null);
   const location = useLocation();
 
   const fetchFirstKid = async () => {
-
     try {
       if (!user) {
         return;
       }
 
-      const db = getFirestore(); // Make sure to initialize your Firestore
-      const auth = getAuth(); // Only if you use Firebase Auth
-      const currentUser = auth.currentUser; // Only if you use Firebase Auth
+      const db = getFirestore();
+      const auth = getAuth();
+      const currentUser = auth.currentUser;
 
-      const kidsRef = collection(doc(db, 'users', currentUser.uid), 'kids'); // Ensure you get the uid from Firebase Auth if you're using it
-      const kidsQuery = query(kidsRef, limit(1));  // Limit the query to retrieve only the first document
+      const kidsRef = collection(doc(db, 'users', currentUser.uid), 'kids');
+      const kidsQuery = query(kidsRef, limit(1));
       const kidDocs = await getDocs(kidsQuery);
 
       if (!kidDocs.empty) {
-        const firstKidData = { id: kidDocs.docs[0].id, ...kidDocs.docs[0].data() };  // Get data of the first kid
-        console.log(firstKidData)
-        setKidData(firstKidData)
+        const firstKidData = { id: kidDocs.docs[0].id, ...kidDocs.docs[0].data() };
+        console.log(firstKidData);
+        setKidData(firstKidData);
       } else {
         console.log('No kids data found');
       }
     } catch (error) {
       console.error('Error fetching first kid: ', error);
+      // Assume setError is defined somewhere or replace with your error handling logic
       setError('Failed to fetch first kid data, please try again later.');
     } finally {
       setLoading(false);
@@ -71,12 +70,12 @@ const FeedPage = ({user}) => {
 
   useEffect(() => {
     if (location.state && location.state.kidToFeed) {
-       setKidData(location.state.kidToFeed);
-       setLoading(false);
+      setKidData(location.state.kidToFeed);
+      setLoading(false);
     } else {
-       fetchFirstKid();
+      fetchFirstKid();
     }
- }, [user, location.state]);
+  }, [user, location.state, setKidData]);
 
 
   

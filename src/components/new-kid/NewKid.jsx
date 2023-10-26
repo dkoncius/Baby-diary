@@ -8,8 +8,10 @@ import {  readAndCompressImage } from 'browser-image-resizer';
 
 import { doc, setDoc } from 'firebase/firestore';
 import { db } from '../../firebase/firebase-config';
+import { useUserContext } from '../../contexts/UserContext';
 
-const NewKid = ({ user }) => {
+const NewKid = () => {
+  const {user} = useUserContext()
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [file, setFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
@@ -43,6 +45,7 @@ const NewKid = ({ user }) => {
   
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    console.time("Image Upload");
     setIsSubmitting(true);
   
     const newKidData = {
@@ -81,24 +84,24 @@ const NewKid = ({ user }) => {
           }
         }
   
-        const resizedImage = await readAndCompressImage(
-          uploadFile,
-          imageConfig
-        );
+        console.time('ImageResizing');
+        const resizedImage = await readAndCompressImage(uploadFile, imageConfig);
+        console.timeEnd('ImageResizing');
   
         const storage = getStorage();
         const filePath = `users/${userId}/kids/${newKidData.name}/profile-image/${uploadFile.name}`;
         const storageRef = ref(storage, filePath);
   
+        console.time('ImageUpload');
         await uploadBytes(storageRef, resizedImage);
+        console.timeEnd('ImageUpload');
   
         newKidData.image = await getDownloadURL(storageRef);
       }
    
-      await setDoc(
-        doc(db, 'users', userId, 'kids', kidId),
-        newKidData
-      );
+      console.time('FirestoreSetDoc');
+      await setDoc(doc(db, 'users', userId, 'kids', kidId), newKidData);
+      console.timeEnd('FirestoreSetDoc');
       console.log('Data and image saved successfully.');
   
       // Clear form data and local storage
@@ -116,6 +119,7 @@ const NewKid = ({ user }) => {
 
       navigate('/feed', { state: { kidToFeed: newKidData, refresh: true } });
       setIsSubmitting(false); 
+      console.timeEnd("Image Upload");
 
     } catch (error) {
       console.error('Error saving data or uploading image:', error);

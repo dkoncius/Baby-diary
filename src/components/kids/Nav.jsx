@@ -1,8 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import { signOutUser } from '../../firebase/auth';
 import { RxCross1 } from "react-icons/rx";
+import { useUserContext } from '../../contexts/UserContext';
 
-export const Nav = ({ user }) => {
+export const Nav = () => {
   const navigate = useNavigate();
 
   const handleSignOut = async () => {

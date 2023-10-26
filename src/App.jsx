@@ -1,131 +1,52 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { doc, collection, query, getDocs } from 'firebase/firestore';
-import { auth, db } from './firebase/firebase-config';
 import LoginForm from "./components/auth/Login";
 import Register from "./components/auth/Register";
-import FeedPage from './pages/FeedPage';
+import FeedPage from './views/FeedPage';
 import { Kids } from './components/kids/Kids';
 import { UpdateKid } from './components/kids/UpdateKid';
 import NewKid from './components/new-kid/NewKid';
 import { AddMemory } from './components/feed/AddMemory';
+import { UserProvider, useUserContext } from './contexts/UserContext';
+import { KidProvider } from './contexts/KidContext';
+
+const ProtectedRoute = ({ children }) => {
+  const { user, loading, hasKids } = useUserContext();
+
+  if (loading) return null;
+  if (!user) return <Navigate to="/login" replace />;
+  if (!hasKids) return <Navigate to="/new-kid" replace />;
+
+  return children;
+};
+
+const MainRoutes = () => {
+  return (
+    <Router className="app">
+      <Routes>
+        <Route path="/login" element={<LoginForm />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/" element={<Navigate to="/feed" replace />} />
+        <Route path="/feed" element={<ProtectedRoute><FeedPage /></ProtectedRoute>} />
+        <Route path="/kids" element={<ProtectedRoute><Kids /></ProtectedRoute>} />
+        <Route path="/update-kid" element={<ProtectedRoute><UpdateKid /></ProtectedRoute>} />
+        <Route path="/new-kid" element={<ProtectedRoute><NewKid /></ProtectedRoute>} />
+        <Route path="/add-memory" element={<ProtectedRoute><AddMemory /></ProtectedRoute>} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    </Router>
+  );
+};
 
 function App() {
-  const [user, setUser] = useState(null);
-  const [hasKids, setHasKids] = useState(false);
-  const [isAuthChecked, setIsAuthChecked] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);  // For managing loading state
-  
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(async (user) => {
-      setUser(user);
-      setIsLoading(true);  // Set loading to true when checking user data
-      
-      if (user) {
-        const hasKids = await checkIfUserHasKids(user.uid);
-        setHasKids(hasKids);
-      }
-
-      setIsAuthChecked(true);
-      setIsLoading(false);  // Set loading to false after user data is checked
-    });
-    
-    return () => unsubscribe();
-  }, []);
-
-  const checkIfUserHasKids = async (userId) => {
-    try {
-      const userDocRef = doc(db, 'users', userId);
-      const kidsCollection = collection(userDocRef, 'kids');
-      const q = query(kidsCollection);
-      const querySnapshot = await getDocs(q);
-      
-      return !querySnapshot.empty;
-    } catch (error) {
-      console.error('Error checking if user has kids:', error);
-      return false;
-    }
-  }; 
-  
-  
-
-  function ProtectedRouteWrapper({ children, redirectTo }) {
-    const [hasKids, setHasKids] = useState(false);
-    const [loading, setLoading] = useState(true);
-
-    // Fetch hasKids status
-    const fetchHasKids = async () => {
-        if (!user) {
-            setLoading(false);
-            return;
-        }
-
-        const hasKidsStatus = await checkIfUserHasKids(user.uid);
-        setHasKids(hasKidsStatus);
-        setLoading(false);
-    };
-
-    // Use the effect hook to fetch hasKids status when the user logs in
-    useEffect(() => {
-        fetchHasKids();
-    }, [user]);
-
-    // While loading, return a loading state or null
-    if (loading) {
-        return null; // or return a loading spinner/component
-    }
-
-    return (
-        user 
-            ? (hasKids ? children : <Navigate to="/new-kid" replace />)
-            : <Navigate to={redirectTo} replace />
-    );
-}
-  
-
   return (
-      <Router className="app">
-        {isAuthChecked ? (
-          <Routes>
-            <Route path="/login" element={<LoginForm setUser={setUser} />} />
-            <Route path="/register" element={<Register setUser={setUser} />} />
-            <Route path="/" element={
-              <ProtectedRouteWrapper redirectTo="/login">
-                <Navigate to="/feed" replace />
-              </ProtectedRouteWrapper>
-            }/>
-            <Route path="/feed" element={
-              <ProtectedRouteWrapper redirectTo="/login">
-                <FeedPage user={user} setUser={setUser} />
-              </ProtectedRouteWrapper>
-            }/>
-            <Route path="/kids" element={
-              <ProtectedRouteWrapper redirectTo="/login">
-                <Kids key={location.state?.lastDeletedKidId} user={user} setUser={setUser} />
-              </ProtectedRouteWrapper>
-            }/>
-            <Route path="/update-kid" element={
-              user 
-                ? <UpdateKid user={user} setUser={setUser} />
-                : <Navigate to="/login" replace />
-            }/>
-            <Route path="/new-kid" element={
-              user 
-                ? <NewKid user={user} setUser={setUser} setHasKids={setHasKids} />
-                : <Navigate to="/login" replace />
-            }/>
-            <Route path="/add-memory" element={
-              <ProtectedRouteWrapper redirectTo="/login">
-                <AddMemory user={user} setUser={setUser} />
-              </ProtectedRouteWrapper>
-            }/>
-            <Route path="*" element={<Navigate to="/login" replace />} />
-          </Routes>
-        ) : (
-          <p>Loading...</p>
-        )}
-      </Router>
+    <UserProvider>
+     <KidProvider>
+        <MainRoutes />
+      </KidProvider>
+    </UserProvider>
   );
 }
+
 
 export default App;

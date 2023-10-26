@@ -4,11 +4,14 @@ import { getFirestore, doc, collection, query, getDocs, limit, setDoc, deleteDoc
 import { db } from '../../firebase/firebase-config';
 import { getAuth } from 'firebase/auth';
 import { UpdateKidForm } from "./UpdateKidForm"
+import { useUserContext } from '../../contexts/UserContext';
+import { useKidContext } from '../../contexts/KidContext';
 
 
-export const UpdateKid = ({user}) => {
+export const UpdateKid = () => {
+    const {user} = useUserContext();
+    const {kidData, setKidData} = useKidContext()
     const [loading, setLoading] = useState(true);
-    const [kidData, setKidData] = useState(null);
     const navigate = useNavigate();
     const location = useLocation();  // Add this line
 

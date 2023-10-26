@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getStorage } from 'firebase/storage';
-import { getFirestore } from 'firebase/firestore';
+import { getFirestore, doc, collection, query, getDocs } from 'firebase/firestore';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -18,4 +18,19 @@ const auth = getAuth(app);
 const storage = getStorage(app);
 const db = getFirestore(app);
 
-export { auth, storage, db };
+
+const checkIfUserHasKids = async (userId) => {
+  try {
+    const userDocRef = doc(db, 'users', userId);
+    const kidsCollection = collection(userDocRef, 'kids');
+    const q = query(kidsCollection);
+    const querySnapshot = await getDocs(q);
+    
+    return !querySnapshot.empty;
+  } catch (error) {
+    console.error('Error checking if user has kids:', error);
+    return false;
+  }
+}; 
+
+export { auth, storage, db, checkIfUserHasKids };
