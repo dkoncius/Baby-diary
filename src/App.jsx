@@ -10,26 +10,22 @@ import { UpdateKid } from './components/kids/UpdateKid';
 import NewKid from './components/new-kid/NewKid';
 import { AddMemory } from './components/feed/AddMemory';
 
+
 function App() {
   const [user, setUser] = useState(null);
   const [hasKids, setHasKids] = useState(false);
-  const [isAuthChecked, setIsAuthChecked] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);  // For managing loading state
-  
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       setUser(user);
-      setIsLoading(true);  // Set loading to true when checking user data
-      
       if (user) {
-        const hasKids = await checkIfUserHasKids(user.uid);
-        setHasKids(hasKids);
+        const hasKidsStatus = await checkIfUserHasKids(user.uid);
+        setHasKids(hasKidsStatus);
       }
-
-      setIsAuthChecked(true);
-      setIsLoading(false);  // Set loading to false after user data is checked
+      setIsLoading(false);
     });
-    
+
     return () => unsubscribe();
   }, []);
 
@@ -49,83 +45,38 @@ function App() {
   
   
 
-  function ProtectedRouteWrapper({ children, redirectTo }) {
-    const [hasKids, setHasKids] = useState(false);
-    const [loading, setLoading] = useState(true);
-
-    // Fetch hasKids status
-    const fetchHasKids = async () => {
-        if (!user) {
-            setLoading(false);
-            return;
-        }
-
-        const hasKidsStatus = await checkIfUserHasKids(user.uid);
-        setHasKids(hasKidsStatus);
-        setLoading(false);
-    };
-
-    // Use the effect hook to fetch hasKids status when the user logs in
-    useEffect(() => {
-        fetchHasKids();
-    }, [user]);
-
-    // While loading, return a loading state or null
-    if (loading) {
+  function ProtectedRouteWrapper({ component: Component, redirectTo, ...props }) {
+    if (isLoading) {
         return null; // or return a loading spinner/component
     }
 
     return (
         user 
-            ? (hasKids ? children : <Navigate to="/new-kid" replace />)
+            ? (hasKids ? <Component {...props} /> : <Navigate to="/new-kid" replace />)
             : <Navigate to={redirectTo} replace />
     );
 }
   
 
-  return (
-      <Router className="app">
-        {isAuthChecked ? (
-          <Routes>
-            <Route path="/login" element={<LoginForm setUser={setUser} />} />
-            <Route path="/register" element={<Register setUser={setUser} />} />
-            <Route path="/" element={
-              <ProtectedRouteWrapper redirectTo="/login">
-                <Navigate to="/feed" replace />
-              </ProtectedRouteWrapper>
-            }/>
-            <Route path="/feed" element={
-              <ProtectedRouteWrapper redirectTo="/login">
-                <FeedPage user={user} setUser={setUser} />
-              </ProtectedRouteWrapper>
-            }/>
-            <Route path="/kids" element={
-              <ProtectedRouteWrapper redirectTo="/login">
-                <Kids key={location.state?.lastDeletedKidId} user={user} setUser={setUser} />
-              </ProtectedRouteWrapper>
-            }/>
-            <Route path="/update-kid" element={
-              user 
-                ? <UpdateKid user={user} setUser={setUser} />
-                : <Navigate to="/login" replace />
-            }/>
-            <Route path="/new-kid" element={
-              user 
-                ? <NewKid user={user} setUser={setUser} setHasKids={setHasKids} />
-                : <Navigate to="/login" replace />
-            }/>
-            <Route path="/add-memory" element={
-              <ProtectedRouteWrapper redirectTo="/login">
-                <AddMemory user={user} setUser={setUser} />
-              </ProtectedRouteWrapper>
-            }/>
-            <Route path="*" element={<Navigate to="/login" replace />} />
-          </Routes>
-        ) : (
-          <p>Loading...</p>
-        )}
-      </Router>
-  );
+return (
+  <Router className="app">
+    {isLoading ? (
+      <p>Loading...</p>
+    ) : (
+      <Routes>
+        <Route path="/login" element={<LoginForm setUser={setUser} />} />
+        <Route path="/register" element={<Register setUser={setUser} />} />
+        <Route path="/" element={<ProtectedRouteWrapper component={Navigate} redirectTo="/login" to="/feed" replace />} />
+        <Route path="/feed" element={<ProtectedRouteWrapper component={FeedPage} redirectTo="/login" user={user} setUser={setUser} />} />
+        <Route path="/kids" element={<ProtectedRouteWrapper component={Kids} redirectTo="/login" key={location.state?.lastDeletedKidId} user={user} setUser={setUser} />} />
+        <Route path="/update-kid" element={user ? <UpdateKid user={user} setUser={setUser} /> : <Navigate to="/login" replace />} />
+        <Route path="/new-kid" element={user ? <NewKid user={user} setUser={setUser} setHasKids={setHasKids} /> : <Navigate to="/login" replace />} />
+        <Route path="/add-memory" element={<ProtectedRouteWrapper component={AddMemory} redirectTo="/login" user={user} setUser={setUser} />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    )}
+  </Router>
+);
 }
 
 export default App;
