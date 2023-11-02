@@ -4,13 +4,15 @@ import { Link, useNavigate } from 'react-router-dom';
 import { auth } from '../../firebase/firebase-config';
 import { signOutUser, signInWithEmail, resetPassword } from '../../firebase/auth';
 import { motion } from 'framer-motion';
+import { useUserContext } from '../../contexts/UserContext';
 
 const variants = {
   hidden: { opacity: 0, y: -20 },
   visible: { opacity: 1, y: 0 },
 };
 
-const LoginForm = ({ setUser }) => {
+const LoginForm = () => {
+  const { setUser} = useUserContext();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');

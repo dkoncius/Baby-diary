@@ -13,7 +13,7 @@ import { KidProvider } from './contexts/KidContext';
 const ProtectedRoute = ({ children }) => {
   const { user, loading, hasKids } = useUserContext();
 
-  if (loading) return null;
+  if (loading) return <div>Loading...</div>; // 👈 Display a loading indicator or keep it null
   if (!user) return <Navigate to="/login" replace />;
   if (!hasKids) return <Navigate to="/new-kid" replace />;
 
@@ -41,12 +41,11 @@ const MainRoutes = () => {
 function App() {
   return (
     <UserProvider>
-     <KidProvider>
+      <KidProvider>
         <MainRoutes />
       </KidProvider>
     </UserProvider>
   );
 }
-
 
 export default App;

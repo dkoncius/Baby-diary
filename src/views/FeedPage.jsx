@@ -9,7 +9,8 @@ import { Highlights } from '../components/feed/FeedHighlights';
 
 import MonthImage from "/assets/feed-2.jpg"
 
-import { UserContext } from '../contexts/UserContext'
+import { useUserContext } from '../contexts/UserContext'
+import { useKidContext } from '../contexts/KidContext';
 
 const ImageSwiper = () => {
     return (
@@ -34,7 +35,8 @@ const ImageSwiper = () => {
 
 
 const FeedPage = () => {
-  const { user, kidData, setKidData } = useContext(UserContext);
+  const { user } = useUserContext();
+  const { kidData, setKidData } = useKidContext();
   const [loading, setLoading] = useState(true);
   const location = useLocation();
 

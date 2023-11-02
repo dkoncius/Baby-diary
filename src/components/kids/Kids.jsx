@@ -5,9 +5,11 @@ import { Nav } from './Nav';
 import { collection, getDocs, query, doc, getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { useUserContext } from '../../contexts/UserContext';
+import { useKidContext } from '../../contexts/KidContext';
 
 export const Kids = () => {
-  const { user, kidData, setKidData } = useUserContext();
+  const { user } = useUserContext();
+  const { kidData, setKidData } = useKidContext();
   const location = useLocation(); 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
