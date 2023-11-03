@@ -1,7 +1,16 @@
-import { doc, setDoc } from "firebase/firestore"
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, signOut, sendPasswordResetEmail   } from 'firebase/auth';
+import { doc, setDoc } from "firebase/firestore";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  sendEmailVerification,
+  signOut,
+  sendPasswordResetEmail
+} from 'firebase/auth';
 import { auth, db } from './firebase-config';
 
+/**
+ * Register and create a new user with email and password
+ */
 export const signUpWithEmail = async (email, password) => {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -13,6 +22,9 @@ export const signUpWithEmail = async (email, password) => {
   }
 };
 
+/**
+ * Sign in a user with email and password
+ */
 export const signInWithEmail = async (email, password) => {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -22,6 +34,9 @@ export const signInWithEmail = async (email, password) => {
   }
 };
 
+/**
+ * Sign out the current authenticated user
+ */
 export const signOutUser = async () => {
   try {
     await signOut(auth);
@@ -30,6 +45,9 @@ export const signOutUser = async () => {
   }
 };
 
+/**
+ * Send a password reset email to the given email address
+ */
 export const resetPassword = async (email) => {
   try {
     await sendPasswordResetEmail(auth, email);
@@ -39,7 +57,9 @@ export const resetPassword = async (email) => {
   }
 };
 
-
+/**
+ * Create a new user record in Firestore database
+ */
 export const createUserInFirestore = async (userId) => {
   try {
     if (!userId) throw new Error('User ID is required');

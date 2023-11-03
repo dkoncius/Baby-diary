@@ -1,7 +1,7 @@
 import { AiOutlinePlus } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
 
-export const Header = ({kidData}) => {
+export const FeedHeader = ({kidData}) => {  // Setting default value for kidData
   const navigate = useNavigate();
 
   const goToAddMemory = () => {
@@ -16,18 +16,17 @@ export const Header = ({kidData}) => {
     });
   };
 
-
   return (
     <>
-        <header>
-            <div className="header-kid" onClick={goToKids}>
-                <img className="header-kid-image" src={kidData.image} alt="profile-1.jpg"/>
-                <h2 className="header-kid-name">{kidData.name}</h2>
-            </div>
-            <div className="icon" onClick={goToAddMemory}>
-              <AiOutlinePlus className='plus'/>
-            </div>
-        </header>
+      <header>
+        <div className="header-kid" onClick={goToKids}>
+          <img className="header-kid-image" src={kidData?.image || 'default-image.jpg'} alt="Kid's profile"/> 
+          <h2 className="header-kid-name">{kidData?.name || 'Default Name'}</h2> 
+        </div>
+        <div className="icon" onClick={goToAddMemory}>
+          <AiOutlinePlus className='plus'/>
+        </div>
+      </header>
     </>
   )
 }

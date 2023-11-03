@@ -1,20 +1,25 @@
 // LoginForm.jsx
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';  // Importing hooks from Redux
 import { auth } from '../../firebase/firebase-config';
 import { signOutUser, signInWithEmail, resetPassword } from '../../firebase/auth';
 import { motion } from 'framer-motion';
+import { setUser } from '../redux/userActions';  // Import the action from the split files
+
 
 const variants = {
   hidden: { opacity: 0, y: -20 },
   visible: { opacity: 1, y: 0 },
 };
 
-const LoginForm = ({ setUser }) => {
+const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [resetRequested, setResetRequested] = useState(false);
+  
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const getErrorMessage = (firebaseError) => {
@@ -31,12 +36,20 @@ const LoginForm = ({ setUser }) => {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       if (user && user.emailVerified) {
-        setUser(user);
+        // Extract only the serializable properties you need
+        const userData = {
+          uid: user.uid,
+          email: user.email,
+          displayName: user.displayName,
+          // ...any other properties you might need
+        };
+        dispatch(setUser(userData));  // Dispatch the serializable userData
         navigate('/');
       }
     });
-    return unsubscribe;
-  }, [setUser, navigate]);
+    return () => unsubscribe();  // Cleanup function to unsubscribe
+  }, [dispatch, navigate]);
+  
 
   const handleSignIn = async (e) => {
     e.preventDefault();

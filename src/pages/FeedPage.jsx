@@ -1,39 +1,24 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchMemoriesForKid } from '../components/redux/userThunks';
 import { getFirestore, doc, collection, query, getDocs, limit } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
-import { Header } from '../components/feed/FeedHeader';
-import {FeedImageGallery} from '../components/feed/FeedImageGallery'; // Update the path accordingly
+import { FeedHeader } from '../components/feed/FeedHeader';
+import {FeedImageGallery} from '../components/feed/FeedImageGallery';
 
 
-const ImageSwiper = ({ images }) => {
-  return (
-    <div className="images">
-      <Swiper
-        slidesPerView={1.2}
-        freeMode={true}
-        spaceBetween={10}
-        breakpoints={{
-          768: { slidesPerView: 3.2 }
-        }}>
-        {images.map((imgSrc, index, array) => (
-          <SwiperSlide className="memory-image" key={index}>
-            <img src={imgSrc} alt={`Slide ${index}`} />
-            <p className="memory-image-number">{index}/{array.length}</p>
-          </SwiperSlide>
-        ))}
-      </Swiper>
-    </div>
-  );
-};
 
-const FeedPage = ({ user }) => {
+const FeedPage = () => {
   const [memories, setMemories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [kidData, setKidData] = useState(null);
   const location = useLocation();
+
+  // Fetch the user from Redux store
+  const user = useSelector(state => state.user);
 
   const fetchMemories = async (kidId) => {
     const db = getFirestore();
@@ -80,20 +65,25 @@ const FeedPage = ({ user }) => {
   };
 
   useEffect(() => {
-    if (location.state && location.state.kidToFeed) {
-      setKidData(location.state.kidToFeed);
-      fetchMemories(location.state.kidToFeed.id);
-      setLoading(false);
-    } else {
-      fetchFirstKid();
-    }
+    const fetchData = async () => {
+      if (location.state && location.state.kidToFeed) {
+        setKidData(location.state.kidToFeed);
+        const memoriesData = await fetchMemoriesForKid(user.uid, location.state.kidToFeed.id);
+        setMemories(memoriesData);
+        setLoading(false);
+      } else {
+        fetchFirstKid();
+      }
+    };
+    fetchData();
   }, [user, location.state]);
+  
 
   const hasMemories = memories && memories.length > 0;
 
   return (
 <main className="feed-page" style={hasMemories ? { display: "block" } : { display: "flex"}}>
-    {!loading && <Header kidData={kidData}/>}
+    {!loading && <FeedHeader kidData={kidData}/>}
 
         {hasMemories ? (
           <>
