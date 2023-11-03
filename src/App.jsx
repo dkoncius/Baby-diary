@@ -8,7 +8,7 @@ import FeedPage from './pages/FeedPage';
 import { Kids } from './components/kids/Kids';
 import { UpdateKid } from './components/kids/UpdateKid';
 import NewKid from './components/new-kid/NewKid';
-import { AddMemory } from './components/feed/AddMemory';
+import { AddMemory } from './pages/AddMemory';
 
 
 function App() {
@@ -68,7 +68,7 @@ return (
         <Route path="/register" element={<Register setUser={setUser} />} />
         <Route path="/" element={<ProtectedRouteWrapper component={Navigate} redirectTo="/login" to="/feed" replace />} />
         <Route path="/feed" element={<ProtectedRouteWrapper component={FeedPage} redirectTo="/login" user={user} setUser={setUser} />} />
-        <Route path="/kids" element={<ProtectedRouteWrapper component={Kids} redirectTo="/login" key={location.state?.lastDeletedKidId} user={user} setUser={setUser} />} />
+        <Route path="/kids" element={<ProtectedRouteWrapper component={Kids} redirectTo="/login" key={location.state?.lastDeletedKidId} user={user} setUser={setUser}  />} />
         <Route path="/update-kid" element={user ? <UpdateKid user={user} setUser={setUser} /> : <Navigate to="/login" replace />} />
         <Route path="/new-kid" element={user ? <NewKid user={user} setUser={setUser} setHasKids={setHasKids} /> : <Navigate to="/login" replace />} />
         <Route path="/add-memory" element={<ProtectedRouteWrapper component={AddMemory} redirectTo="/login" user={user} setUser={setUser} />} />

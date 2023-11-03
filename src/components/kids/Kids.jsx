@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { KidsList } from './KidsList';
-import { Nav } from './Nav';
+import { KidsNav } from './KidsNav';
 import { collection, getDocs, query, doc, getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 
@@ -9,6 +9,7 @@ export const Kids = ({ user }) => {
   const location = useLocation(); 
   const [loading, setLoading] = useState(true);
   const [kids, setKids] = useState([]);
+  const [kidData, setKidData] = useState(null)
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -39,9 +40,19 @@ export const Kids = ({ user }) => {
     fetchKids();
   }, [user]);
 
+
+  
+  useEffect(() => {
+    if (location.state) {
+      setKidData(location.state.selectedKid);
+    } else {
+      console.log("Kids component");
+    }
+  }, [user, location.state]);
+
   return (
     <>
-      <Nav user={user} />
+      <KidsNav user={user} kidData={kidData} />
       {loading ? 'Loading...' : error ? error : <KidsList kids={kids} setKids={setKids} user={user} />}
     </>
   );

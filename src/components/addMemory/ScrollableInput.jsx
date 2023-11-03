@@ -42,7 +42,7 @@ function useScrollableInput(min, step, heading) {
   };
 }
 
-export default function ScrollableInput({min, step, fixedNumber, heading}) {
+export const ScrollableInput = ({min, step, fixedNumber, heading}) => {
   const { value: height, prevValue: prevHeight, divRef, setValue } = useScrollableInput(min, step, heading);
 
   return (
