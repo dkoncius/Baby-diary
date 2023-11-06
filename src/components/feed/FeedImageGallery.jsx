@@ -1,29 +1,42 @@
 import React, { useState } from 'react';
+import { SelectedImage } from './SelectedImage';
+import { AnimatePresence } from 'framer-motion';
 
 export const FeedImageGallery = ({ memories }) => {
   const [selectedMemory, setSelectedMemory] = useState(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const changeImage = (increment) => {
+    const newIndex = currentIndex + increment;
+
+    if (newIndex >= 0 && newIndex < memories.length) {
+      setSelectedMemory(memories[newIndex]);
+      setCurrentIndex(newIndex);
+    }
+  };
 
   return (
     <div className="image-gallery">
       {memories.map((memory, index) => (
-        <div key={index} className="memory-thumbnail" onClick={() => setSelectedMemory(memory)}>
-          <img src={memory.images[0]} alt={`Memory ${index}`} /> {/* Assuming first image in the array is the thumbnail */}
+        <div key={index} className="memory-thumbnail" onClick={() => {
+          setSelectedMemory(memory);
+          setCurrentIndex(index);
+        }}>
+          <img src={memory.images[0]} alt={`Memory ${index}`} />
         </div>
       ))}
 
+    <AnimatePresence>
       {selectedMemory && (
-        <div className="expanded-memory">
-          <img src={selectedMemory.images[0]} alt="Expanded memory" />
-          <div className="memory-details">
-            <p>Date: {new Date(selectedMemory.date).toLocaleDateString('lt-LT', { month: 'long', day: 'numeric' })}</p>
-            <p>Height: {selectedMemory.height}</p>
-            <p>Weight: {selectedMemory.weight}</p>
-            <p>Mood: {selectedMemory.mood}</p>
-            <p>Description: {selectedMemory.description}</p>
-          </div>
-          <button onClick={() => setSelectedMemory(null)}>Close</button>
-        </div>
+        <SelectedImage
+          selectedMemory={selectedMemory}
+          setSelectedMemory={setSelectedMemory}
+          changeImage={changeImage}
+          currentIndex={currentIndex}
+          totalImages={memories.length}
+        />
       )}
+    </AnimatePresence>
     </div>
   );
 };

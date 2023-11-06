@@ -84,6 +84,8 @@ const FeedPage = ({ user }) => {
       setKidData(location.state.kidToFeed);
       fetchMemories(location.state.kidToFeed.id);
       setLoading(false);
+
+      console.log(location.state.kidToFeed)
     } else {
       fetchFirstKid();
     }

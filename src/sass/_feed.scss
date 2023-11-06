@@ -302,28 +302,96 @@ header {
         }
       }
       
-      .expanded-memory {
+      .selected-memory {
         position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: #ffffff;
-        padding: 20px;
-        width: 80%;
-        max-height: 80vh;
-        overflow-y: scroll;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+        background: $primary-color;
+        color: $brown-color;
+        height: 90%;
+        width: 90%;
+        max-width: 500px;
+        overflow: auto;
         z-index: 1000;
         border: 1px solid #ddd;
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+
+        @media (max-width: $tablet) {
+            height: 100%;
+            width: 100%;
+            max-width: 100%;
+        }
+      }
+
+      .selected-memory .date {
+        padding: 10px 15px;
+        font-size: 0.8em;
+        text-align: end;
       }
       
-      .expanded-memory img {
+      .selected-memory img {
+        height: 60%;
         width: 100%;
-        height: auto;
+        object-fit: cover;
+      }
+
+      .selected-memory .go-back-button {
+        max-width: 500px;
+        height: calc(20% - 10px);
+        background: none;
+        padding-left: 30px;
+        padding-top: 30px;
+        border: none;
+
+        @media (max-width: $tablet) {
+            height: calc(10% - 10px);
+        }
+      }
+
+      .selected-memory button .icon {
+        font-size: 2em;
+        color: $brown-color;
       }
       
-      .memory-details {
-        margin-top: 20px;
+      .selected-memory-details {
+        display: flex;
+        justify-content: space-around;
+        padding: 15px;
+        flex: 1;
+      }
+
+      .selected-memory-details p {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .selected-memory-details p span:last-of-type {
+        font-size: 2em;
+        font-weight: bold;
+      }
+
+      .image-navigation {
+        top: calc(20% + 30px);
+        height: 60%;
+        width: 100%;
+        position: absolute;
+        display: flex;
+        justify-content: space-between;
+
+        @media (max-width: $tablet) {
+            top: calc(20% - 30px);
+        }
+      }
+
+      .image-navigation button {
+        height: 100%;
+        width: 20%;
+        background: rgba(255, 255, 255, 0.105);
+        border: none;
       }
 }
   
